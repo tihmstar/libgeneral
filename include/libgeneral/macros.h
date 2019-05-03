@@ -32,6 +32,14 @@
 #   define retcustomerror(err,custom_except) throw tihmstar::custom_except(__LINE__, err, __FILE__)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
 #   define assureclean(cond) do {if (!(cond)){clean();assure(cond);}} while(0)
+//mach assures
+#   define assureMach(kernRet) if (kernRet) throw tihmstar::EXPECTIONNAME(__LINE__, "assure failed", __FILE__,kernRet)
+#   define assureMachclean(kernRet) do {if (kernRet){clean();assureMach(kernRet);}} while(0)
+#   define assureCatchClean(code) do {try { code; } catch (EXPECTIONNAME &e) { clean(); throw; }} while (0)
+#   define assureNoDoublethrow(code) \
+        do{try {code;} catch (EXPECTIONNAME &e) {if (isInException) {error("Double exception! Error in line=%d",__LINE__);}else{throw;}}}while (0)
+
+
 
 //more cpp
 #   ifndef EXPECTIONNAME
@@ -42,6 +50,8 @@
 //assure c
 #   define assure(a) do{ if ((a) == 0){err=__LINE__; goto error;} }while(0)
 #   define retassure(retcode, a) do{ if ((a) == 0){err=retcode; goto error;} }while(0)
+#   define reterror(estr ...) do{error(estr);err=__LINE__; goto error; }while(0)
+
 #endif
 
 #endif /* macros_h */
