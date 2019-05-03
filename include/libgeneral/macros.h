@@ -10,13 +10,11 @@
 #define macros_h
 
 #ifdef DEBUG //versioning
-#   define TOOL_NAME "DEBUG: TOOL_NAME_NOT_SET!"
+#   define PACKAGE_NAME "DEBUG: TOOL_NAME_NOT_SET!"
 #   define VERSION_COMMIT_COUNT "Debug"
 #   define VERSION_COMMIT_SHA "Build: " __DATE__ " " __TIME__
 #else
-#   ifndef TOOL_NAME
-#       error TOOL_NAME_NOT_SET
-#   endif
+#include <config.h>
 #endif
 
 #define info(a ...) ({printf(a),printf("\n");})
