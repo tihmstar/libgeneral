@@ -15,8 +15,9 @@ using namespace tihmstar;
 exception::exception(int code, std::string err, std::string filename) :
     _err(err),
     _code(code),
-    _filename(filename){
-        error("initing exception with build: count=%s sha=%s",build_commit_count().c_str(),build_commit_sha().c_str());
+    _filename(filename)
+    {
+        //empty constructor
     };
 
 const char *exception::what(){
