@@ -10,20 +10,36 @@
 #define macros_h
 
 #ifdef DEBUG //versioning
-#   define PACKAGE_NAME "DEBUG: TOOL_NAME_NOT_SET!"
 #   define VERSION_COMMIT_COUNT "Debug"
 #   define VERSION_COMMIT_SHA "Build: " __DATE__ " " __TIME__
 #else
 #include <config.h>
 #endif
 
+#ifndef PACKAGE_NAME
+#define PACKAGE_NAME "PACKAGE_NAME_not_set"
+#endif
+
+#ifndef VERSION_MAJOR
+#define VERSION_MAJOR "0"
+#endif
+
+#define VERSION_STRING PACKAGE_NAME " version: " VERSION_MAJOR "." VERSION_COMMIT_COUNT "-" VERSION_COMMIT_SHA
+
+
+// ---- functions ----
+
+// -- logging --
 #define info(a ...) ({printf(a),printf("\n");})
 #define log(a ...) ({printf(a),printf("\n");})
 #define warning(a ...) ({printf("[WARNING] "), printf(a),printf("\n");})
 #define error(a ...) ({printf("[Error] "),printf(a),printf("\n");})
 
+
 #define safeFree(ptr) ({if (ptr) free(ptr),ptr=NULL;})
 
+
+// -- assure --
 #ifdef __cplusplus
 //assure cpp
 #   define assure(cond) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, "assure failed", __FILE__)
