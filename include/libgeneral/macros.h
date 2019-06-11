@@ -78,7 +78,7 @@
 #else
 //assure c
 #   define assure(a) do{ if ((a) == 0){err=__LINE__; goto error;} }while(0)
-#   define retassure(cond, errstr ...) do{ if ((cond) == 0){error(errstr); goto error;} }while(0)
+#   define retassure(cond, errstr ...) do{ if ((cond) == 0){err=__LINE__;error(errstr); goto error;} }while(0)
 #   define reterror(estr ...) do{error(estr);err=__LINE__; goto error; }while(0)
 
 #endif
