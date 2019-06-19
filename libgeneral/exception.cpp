@@ -12,20 +12,30 @@
 
 using namespace tihmstar;
 
-exception::exception(int code, std::string err, std::string filename) :
-    _err(err),
+exception::exception(int code, const char *filename, const char *err ...) :
     _code(code),
     _filename(filename)
     {
-        //empty constructor
+        va_list ap = {};
+        va_start(ap, err);
+        vasprintf(&_err, err, ap);
+        va_end(ap);
     };
 
 const char *exception::what(){
-    return _err.c_str();
+    return _err;
 }
 
 int exception::code() const{
-    return _code | (int)(_filename.size()<<16);
+    return (_code << 16) | (int)(_filename.size());
+}
+
+void exception::dump() const{
+    printf("[exception]:\n");
+    printf("what=%s\n",_err);
+    printf("code=%d\n",code());
+    printf("commit count=%s:\n",build_commit_count().c_str());
+    printf("commit sha  =%s:\n",build_commit_sha().c_str());
 }
 
 std::string exception::build_commit_count() const {
@@ -35,3 +45,7 @@ std::string exception::build_commit_count() const {
 std::string exception::build_commit_sha() const{
     return "build_commit_sha: override me!";
 };
+
+exception::~exception(){
+    safeFree(_err);
+}

@@ -45,6 +45,7 @@
 #define safeFreeCustom(ptr,func) ({if (ptr) func(ptr),ptr=NULL;})
 
 #ifdef __cplusplus
+#include <functional>
 #   ifndef NO_EXCEPT_ASSURE
 #       define EXCEPT_ASSURE
 #   endif
@@ -52,22 +53,26 @@
 
 
 // -- assure --
+
+#   define cassure(a) do{ if ((a) == 0){err=__LINE__; goto error;} }while(0)
+#   define cretassure(cond, errstr ...) do{ if ((cond) == 0){err=__LINE__;error(errstr); goto error;} }while(0)
+#   define creterror(estr ...) do{error(estr);err=__LINE__; goto error; }while(0)
+
+
 #ifdef EXCEPT_ASSURE
 #include "exception.hpp"
 //assure cpp
-#   define assure(cond) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, "assure failed", __FILE__)
-#   define retassure(cond, err) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,err,__FILE__)
-#   define reterror(err) throw tihmstar::EXPECTIONNAME(__LINE__, err, __FILE__)
-#   define retcustomerror(err,custom_except) throw tihmstar::custom_except(__LINE__, err, __FILE__)
+#   define assure(cond) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed")
+#   define retassure(cond, errstr ...) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,__FILE__,errstr)
+#   define reterror(errstr ...) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, errstr)
+#   define retcustomerror(custom_except,errstr ...) throw tihmstar::custom_except(__LINE__, __FILE__, errstr)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
-#   define assureclean(cond) do {if (!(cond)){clean();assure(cond);}} while(0)
 //mach assures
-#   define assureMach(kernRet) if (kernRet) throw tihmstar::EXPECTIONNAME(__LINE__, "assure failed", __FILE__,kernRet)
+//#   define assureMach(kernRet) if (kernRet) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed")
 #   define assureMachclean(kernRet) do {if (kernRet){clean();assureMach(kernRet);}} while(0)
 #   define assureCatchClean(code) do {try { code; } catch (EXPECTIONNAME &e) { clean(); throw; }} while (0)
 #   define assureNoDoublethrow(code) \
         do{try {code;} catch (EXPECTIONNAME &e) {if (isInException) {error("Double exception! Error in line=%d",__LINE__);}else{throw;}}}while (0)
-
 
 
 // //more cpp assure
@@ -75,11 +80,23 @@
 #       define EXPECTIONNAME exception
 #   endif
 
+
+class guard{
+    std::function<void()> _f;
+public:
+    guard(std::function<void()> cleanup) : _f(cleanup) {}
+    guard(const guard&) = delete; //delete copy constructor
+    guard(guard &&o) = delete; //move constructor
+    
+    ~guard(){_f();}
+};
+#define cleanup(f) guard _cleanup(f);
+
 #else
 //assure c
-#   define assure(a) do{ if ((a) == 0){err=__LINE__; goto error;} }while(0)
-#   define retassure(cond, errstr ...) do{ if ((cond) == 0){err=__LINE__;error(errstr); goto error;} }while(0)
-#   define reterror(estr ...) do{error(estr);err=__LINE__; goto error; }while(0)
+#   define assure(a) cassure(a)
+#   define retassure(cond, errstr ...) cretassure(cond, errstr)
+#   define reterror(estr ...) creterror(estr)
 
 #endif
 
