@@ -39,8 +39,6 @@
 #define error(a ...) ({printf("[Error] "),printf(a),printf("\n");})
 #endif
 
-#define NOTIMPLEMENTED() __assert_rtn(__func__, __FILE__, __LINE__, "not implemented")
-
 #define safeFree(ptr) ({if (ptr) free(ptr),ptr=NULL;})
 #define safeFreeCustom(ptr,func) ({if (ptr) func(ptr),ptr=NULL;})
 
