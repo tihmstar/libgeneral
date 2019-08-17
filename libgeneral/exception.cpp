@@ -9,6 +9,7 @@
 #include <libgeneral/macros.h>
 #include <libgeneral/exception.hpp>
 #include <string>
+#include <stdarg.h>
 
 using namespace tihmstar;
 
