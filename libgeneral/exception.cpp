@@ -15,7 +15,8 @@ using namespace tihmstar;
 
 exception::exception(int code, const char *filename, const char *err ...) :
     _code(code),
-    _filename(filename)
+    _filename(filename),
+    _err(NULL)
     {
         va_list ap = {};
         va_start(ap, err);

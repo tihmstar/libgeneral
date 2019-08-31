@@ -12,8 +12,15 @@
 #include <assert.h>
 
 #ifdef DEBUG //versioning
-#   define VERSION_COMMIT_COUNT "Debug"
-#   define VERSION_COMMIT_SHA "Build: " __DATE__ " " __TIME__
+#	ifndef VERSION_COMMIT_COUNT
+#   	define VERSION_COMMIT_COUNT "Debug"
+#	endif
+#	ifndef VERSION_COMMIT_SHA
+#   	define VERSION_COMMIT_SHA "Build: " __DATE__ " " __TIME__
+#	endif
+#	ifdef HAVE_CONFIG_H
+#		include <config.h>
+#	endif
 #else
 #include <config.h>
 #endif
