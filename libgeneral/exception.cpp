@@ -41,11 +41,11 @@ void exception::dump() const{
 }
 
 std::string exception::build_commit_count() const {
-    return "build_commit_count: override me!";
+    return VERSION_COMMIT_COUNT;
 };
 
 std::string exception::build_commit_sha() const{
-    return "build_commit_sha: override me!";
+    return VERSION_COMMIT_SHA;
 };
 
 exception::~exception(){
