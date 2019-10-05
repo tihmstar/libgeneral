@@ -28,7 +28,7 @@ namespace tihmstar {
          */
         int code() const;
         
-        void dump() const;
+        virtual void dump() const;
         
         //Information about build
         virtual std::string build_commit_count() const;
