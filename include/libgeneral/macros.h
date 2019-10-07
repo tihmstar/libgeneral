@@ -67,10 +67,12 @@
 #ifdef EXCEPT_ASSURE
 #include "exception.hpp"
 //assure cpp
-#   define assure(cond) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed")
-#   define retassure(cond, errstr ...) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,__FILE__,errstr)
-#   define reterror(errstr ...) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, errstr)
-#   define retcustomerror(custom_except,errstr ...) throw tihmstar::custom_except(__LINE__, __FILE__, errstr)
+#   define assure(cond) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed"); } while(0)
+#   define retassure(cond, errstr ...) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,__FILE__,errstr); } while(0)
+#   define customassure(cond, custom_except) do{ if ((cond) == 0) throw tihmstar::custom_except(__LINE__, __FILE__, "assure failed"); } while(0)
+#   define retcustomassure(cond, custom_except,errstr ...) do{ if ((cond) == 0) throw tihmstar::custom_except(__LINE__, __FILE__, errstr); } while(0)
+#   define reterror(errstr ...) do{ throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, errstr); } while(0)
+#   define retcustomerror(custom_except,errstr ...) do{ throw tihmstar::custom_except(__LINE__, __FILE__, errstr); } while(0)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
 //mach assures
 //#   define assureMach(kernRet) if (kernRet) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed")
