@@ -30,10 +30,10 @@
 #define safeFree(ptr) ({if (ptr) free(ptr),ptr=NULL;})
 
 #ifdef __cplusplus
-#   define assure(cond) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, "assure failed", LOCAL_FILENAME)
-#   define retassure(cond, err) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,err,LOCAL_FILENAME)
+#   define assure(cond) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, "assure failed", __FILE__)
+#   define retassure(cond, err) if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,err,__FILE__)
 #   define reterror(err) throw tihmstar::EXPECTIONNAME(__LINE__, err, LOCAL_FILENAME)
-#   define retcustomerror(err,except) throw tihmstar::EXPECTIONNAME(__LINE__, err, LOCAL_FILENAME)
+#   define retcustomerror(err,except) throw tihmstar::EXPECTIONNAME(__LINE__, err, __FILE__)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
 #   define assureclean(cond) do {if (!(cond)){clean();assure(cond);}} while(0)
 #else
