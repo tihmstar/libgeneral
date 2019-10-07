@@ -13,11 +13,11 @@
 
 namespace tihmstar {
     class exception : public std::exception{
-        std::string _err;
         int _code;
         std::string _filename;
+        char *_err;
     public:
-        exception(int code, std::string err, std::string filename);
+        exception(int code, const char *filename, const char *err ...);
         
         //custom error can be used
         const char *what();
@@ -28,9 +28,13 @@ namespace tihmstar {
          */
         int code() const;
         
+        virtual void dump() const;
+        
         //Information about build
         virtual std::string build_commit_count() const;
         virtual std::string build_commit_sha() const;
+        
+        ~exception();
     };
 };
 
