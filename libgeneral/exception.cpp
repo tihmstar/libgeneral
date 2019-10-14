@@ -6,8 +6,8 @@
 //  Copyright © 2018 tihmstar. All rights reserved.
 //
 
-#include <liboffsetfinder64/libgeneral/macros.h>
-#include <liboffsetfinder64/libgeneral/exception.hpp>
+#include <libgeneral/macros.h>
+#include <libgeneral/exception.hpp>
 #include <string>
 #include <stdarg.h>
 
