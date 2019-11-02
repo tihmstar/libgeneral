@@ -48,6 +48,7 @@
 
 #define safeFree(ptr) ({if (ptr) free(ptr),ptr=NULL;})
 #define safeFreeCustom(ptr,func) ({if (ptr) func(ptr),ptr=NULL;})
+#define safeFreeConst(ptr) ({if(void *fbuf = (void*)ptr){ptr = NULL; free(fbuf);}})
 
 #ifdef __cplusplus
 #include <functional>
