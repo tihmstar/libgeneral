@@ -6,8 +6,8 @@
 //  Copyright © 2018 tihmstar. All rights reserved.
 //
 
-#include <liboffsetfinder64/libgeneral/macros.h>
-#include <liboffsetfinder64/libgeneral/exception.hpp>
+#include <libgeneral/macros.h>
+#include <libgeneral/exception.hpp>
 #include <string>
 #include <stdarg.h>
 
@@ -36,6 +36,8 @@ void exception::dump() const{
     printf("[exception]:\n");
     printf("what=%s\n",_err);
     printf("code=%d\n",code());
+    printf("line=%d\n",_code);
+    printf("file=%s\n",_filename.c_str());
     printf("commit count=%s:\n",build_commit_count().c_str());
     printf("commit sha  =%s:\n",build_commit_sha().c_str());
 }
