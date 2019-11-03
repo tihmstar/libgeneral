@@ -27,3 +27,14 @@ AC_CONFIG_FILES([Makefile
                  libgeneral/Makefile])
 
 AC_OUTPUT
+
+echo "
+Configuration for $PACKAGE-$VERSION:
+-------------------------------------------
+
+  install prefix ..........: $prefix"
+echo "  compiler ................: ${CC}
+
+  Now type 'make' to build $PACKAGE-$VERSION,
+  and then 'make install' for installation.
+"
