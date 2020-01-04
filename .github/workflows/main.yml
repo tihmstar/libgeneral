@@ -28,11 +28,11 @@ jobs:
     - name: prepre buildroot
       run: mkdir $BUILDROOT
     - name: autogen
-      run: ./autogen.sh --enable-static --disable-shared --prefix=$GITHUB_WORKSPACE/$BUILDROOT
+      run: ./autogen.sh --enable-static --disable-shared
     - name: make
       run: make
     - name: make install
-      run: make install
+      run: make DESTDIR=$GITHUB_WORKSPACE/$BUILDROOT install
     - uses: actions/upload-artifact@v1
       with:
         name: ${{ env.BUILDROOT }}
@@ -93,4 +93,3 @@ jobs:
         asset_path: buildroot_macos-latest.zip
         asset_name: buildroot_macos-latest.zip
         asset_content_type: application/zip
-
