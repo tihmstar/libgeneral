@@ -44,6 +44,11 @@
 #define log(a ...) ({printf(a),printf("\n");})
 #define warning(a ...) ({printf("[WARNING] "), printf(a),printf("\n");})
 #define error(a ...) ({printf("[Error] "),printf(a),printf("\n");})
+#   ifdef DEBUG
+#       define debug(a ...) ({printf("[DEBUG] "),printf(a),printf("\n");})
+#   else
+#       define debug(a ...)
+#   endif
 #endif
 
 #define safeFree(ptr) ({if (ptr) free(ptr),ptr=NULL;})
