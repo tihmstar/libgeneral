@@ -81,8 +81,8 @@
 #   define retcustomerror(custom_except,errstr ...) do{ throw tihmstar::custom_except(__LINE__, __FILE__, errstr); } while(0)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
 //mach assures
-//#   define assureMach(kernRet) if (kernRet) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed")
-#   define assureMachclean(kernRet) do {if (kernRet){clean();assureMach(kernRet);}} while(0)
+#   define assureMach(kernRet) do {kern_return_t __kret = kernRet; if (__kret) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed",__kret);} while(0)
+#   define assureMachclean(kernRet) do {kern_return_t __kret = kernRet; if (__kret){clean();assureMach(__kret);}} while(0)
 #   define assureCatchClean(code) do {try { code; } catch (EXPECTIONNAME &e) { clean(); throw; }} while (0)
 #   define assureNoDoublethrow(code) \
         do{try {code;} catch (EXPECTIONNAME &e) {if (isInException) {error("Double exception! Error in line=%d",__LINE__);}else{throw;}}}while (0)
