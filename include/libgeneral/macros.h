@@ -22,7 +22,9 @@
 #		include <config.h>
 #	endif
 #else
-#include <config.h>
+#    ifdef HAVE_CONFIG_H
+#        include <config.h>
+#   endif
 #endif
 
 #ifndef PACKAGE_NAME
