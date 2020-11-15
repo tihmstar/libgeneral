@@ -13,11 +13,13 @@
 
 namespace tihmstar {
     class exception : public std::exception{
-        int _code;
+        const char *_commit_count_str;
+        const char *_commit_sha_str;
+        int _line;
         std::string _filename;
         char *_err;
     public:
-        exception(int code, const char *filename, const char *err ...);
+        exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err ...);
         
         //custom error can be used
         const char *what();

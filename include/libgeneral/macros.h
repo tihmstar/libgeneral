@@ -75,15 +75,15 @@
 #ifdef EXCEPT_ASSURE
 #include "exception.hpp"
 //assure cpp
-#   define assure(cond) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed"); } while(0)
-#   define retassure(cond, errstr ...) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(__LINE__,__FILE__,errstr); } while(0)
-#   define customassure(cond, custom_except) do{ if ((cond) == 0) throw tihmstar::custom_except(__LINE__, __FILE__, "assure failed"); } while(0)
-#   define retcustomassure(cond, custom_except,errstr ...) do{ if ((cond) == 0) throw tihmstar::custom_except(__LINE__, __FILE__, errstr); } while(0)
-#   define reterror(errstr ...) do{ throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, errstr); } while(0)
-#   define retcustomerror(custom_except,errstr ...) do{ throw tihmstar::custom_except(__LINE__, __FILE__, errstr); } while(0)
+#   define assure(cond) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, __FILE__, "assure failed"); } while(0)
+#   define retassure(cond, errstr ...) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__,__FILE__,errstr); } while(0)
+#   define customassure(cond, custom_except) do{ if ((cond) == 0) throw tihmstar::custom_except(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, __FILE__, "assure failed"); } while(0)
+#   define retcustomassure(cond, custom_except,errstr ...) do{ if ((cond) == 0) throw tihmstar::custom_except(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, __FILE__, errstr); } while(0)
+#   define reterror(errstr ...) do{ throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, __FILE__, errstr); } while(0)
+#   define retcustomerror(custom_except,errstr ...) do{ throw tihmstar::custom_except(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, __FILE__, errstr); } while(0)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
 //mach assures
-#   define assureMach(kernRet) do {kern_return_t __kret = kernRet; if (__kret) throw tihmstar::EXPECTIONNAME(__LINE__, __FILE__, "assure failed");} while(0)
+#   define assureMach(kernRet) do {kern_return_t __kret = kernRet; if (__kret) throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, __FILE__, "assure failed");} while(0)
 #   define assureMachclean(kernRet) do {kern_return_t __kret = kernRet; if (__kret){clean();assureMach(__kret);}} while(0)
 #   define assureCatchClean(code) do {try { code; } catch (EXPECTIONNAME &e) { clean(); throw; }} while (0)
 #   define assureNoDoublethrow(code) \

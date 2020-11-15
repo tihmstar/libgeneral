@@ -13,8 +13,10 @@
 
 using namespace tihmstar;
 
-exception::exception(int code, const char *filename, const char *err ...) :
-    _code(code),
+exception::exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err ...) :
+    _commit_count_str(commit_count_str),
+    _commit_sha_str(commit_sha_str),
+    _line(line),
     _filename(filename),
     _err(NULL)
     {
@@ -29,25 +31,25 @@ const char *exception::what(){
 }
 
 int exception::code() const{
-    return (_code << 16) | (int)(_filename.size());
+    return (_line << 16) | (int)(_filename.size());
 }
 
 void exception::dump() const{
     printf("[exception]:\n");
     printf("what=%s\n",_err);
     printf("code=%d\n",code());
-    printf("line=%d\n",_code);
+    printf("line=%d\n",_line);
     printf("file=%s\n",_filename.c_str());
     printf("commit count=%s:\n",build_commit_count().c_str());
     printf("commit sha  =%s:\n",build_commit_sha().c_str());
 }
 
 std::string exception::build_commit_count() const {
-    return VERSION_COMMIT_COUNT;
+    return _commit_count_str;
 };
 
-std::string exception::build_commit_sha() const{
-    return VERSION_COMMIT_SHA;
+std::string exception::build_commit_sha() const {
+    return _commit_sha_str;
 };
 
 exception::~exception(){
