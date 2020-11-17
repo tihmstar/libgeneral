@@ -7,6 +7,10 @@
 //
 
 #include <stdio.h>
+#include "Event.hpp"
+#include "DeliveryEvent.hpp"
+#include "lck_container.hpp"
+#include "Manager.hpp"
 
 int main(int argc, const char * argv[]) {
     // insert code here...

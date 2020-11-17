@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		87977F73227C4B71004F31DA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 87977F72227C4B71004F31DA /* main.c */; };
+		876A59052563C1FA00193244 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 876A59042563C1FA00193244 /* Event.cpp */; };
+		876A59172563C67300193244 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 876A59152563C67300193244 /* Manager.cpp */; };
+		87977F73227C4B71004F31DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87977F72227C4B71004F31DA /* main.cpp */; };
 		87977F7B227C4BA1004F31DA /* exception.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87977F7A227C4BA1004F31DA /* exception.cpp */; };
 /* End PBXBuildFile section */
 
@@ -24,8 +26,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		876A59042563C1FA00193244 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		876A590F2563C54300193244 /* lck_container.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = lck_container.hpp; path = include/libgeneral/lck_container.hpp; sourceTree = SOURCE_ROOT; };
+		876A59102563C54300193244 /* DeliveryEvent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DeliveryEvent.hpp; path = include/libgeneral/DeliveryEvent.hpp; sourceTree = SOURCE_ROOT; };
+		876A59112563C54300193244 /* Event.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Event.hpp; path = include/libgeneral/Event.hpp; sourceTree = SOURCE_ROOT; };
+		876A59152563C67300193244 /* Manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Manager.cpp; sourceTree = "<group>"; };
+		876A591A2563C95300193244 /* Manager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Manager.hpp; path = include/libgeneral/Manager.hpp; sourceTree = SOURCE_ROOT; };
 		87977F6F227C4B71004F31DA /* libgeneral */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = libgeneral; sourceTree = BUILT_PRODUCTS_DIR; };
-		87977F72227C4B71004F31DA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		87977F72227C4B71004F31DA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		87977F79227C4B99004F31DA /* exception.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = exception.hpp; path = ../include/libgeneral/exception.hpp; sourceTree = "<group>"; };
 		87977F7A227C4BA1004F31DA /* exception.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = exception.cpp; sourceTree = "<group>"; };
 		87977F7C227C4BD3004F31DA /* macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = macros.h; path = ../include/libgeneral/macros.h; sourceTree = "<group>"; };
@@ -64,7 +72,13 @@
 				87977F7C227C4BD3004F31DA /* macros.h */,
 				87977F79227C4B99004F31DA /* exception.hpp */,
 				87977F7A227C4BA1004F31DA /* exception.cpp */,
-				87977F72227C4B71004F31DA /* main.c */,
+				876A59112563C54300193244 /* Event.hpp */,
+				876A59042563C1FA00193244 /* Event.cpp */,
+				876A59102563C54300193244 /* DeliveryEvent.hpp */,
+				876A590F2563C54300193244 /* lck_container.hpp */,
+				876A591A2563C95300193244 /* Manager.hpp */,
+				876A59152563C67300193244 /* Manager.cpp */,
+				87977F72227C4B71004F31DA /* main.cpp */,
 			);
 			path = libgeneral;
 			sourceTree = "<group>";
@@ -125,8 +139,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				87977F73227C4B71004F31DA /* main.c in Sources */,
+				876A59052563C1FA00193244 /* Event.cpp in Sources */,
+				87977F73227C4B71004F31DA /* main.cpp in Sources */,
 				87977F7B227C4BA1004F31DA /* exception.cpp in Sources */,
+				876A59172563C67300193244 /* Manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +267,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"EXPECTIONNAME='libgeneral'",
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/include";
 				PRODUCT_NAME = "$(TARGET_NAME)";
