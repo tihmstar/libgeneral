@@ -6,8 +6,8 @@
 //  Copyright © 2020 tihmstar. All rights reserved.
 //
 
-#include <libgeneral/macros.h>
-#include "Event.hpp"
+#include "../include/libgeneral/macros.h"
+#include "../include/libgeneral/Event.hpp"
 
 using namespace tihmstar;
 
