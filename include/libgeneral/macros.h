@@ -12,14 +12,14 @@
 #include <assert.h>
 
 #ifdef DEBUG //versioning
+#    ifdef HAVE_CONFIG_H
+#        include <config.h>
+#    endif
 #	ifndef VERSION_COMMIT_COUNT
 #   	define VERSION_COMMIT_COUNT "Debug"
 #	endif
 #	ifndef VERSION_COMMIT_SHA
 #   	define VERSION_COMMIT_SHA "Build: " __DATE__ " " __TIME__
-#	endif
-#	ifdef HAVE_CONFIG_H
-#		include <config.h>
 #	endif
 #else
 #    ifdef HAVE_CONFIG_H
