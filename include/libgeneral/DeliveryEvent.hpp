@@ -29,8 +29,13 @@ namespace tihmstar {
         ~DeliveryEvent();
         
         T wait();
-        
         void post(T data);
+        
+        /*
+            Releases waiter and hints destruction of the object in near future
+            Further calls to wait() or post() are not allowed after calling kill()
+         */
+        void kill();
     };
 
 #pragma mark implementation
@@ -84,6 +89,20 @@ namespace tihmstar {
         
         _dataLock.lock();
         _dataQueue.push(data);
+        _dataWait.notifyAll();
+        _dataLock.unlock();
+    }
+
+    template <class T>
+    void DeliveryEvent<T>::kill(){
+        assert(!_isDying);
+        ++_members;
+        cleanup([&]{
+            --_members;
+            _membersUpdateEvent.notifyAll();
+        });
+        _isDying = true;
+        _dataLock.lock();
         _dataWait.notifyAll();
         _dataLock.unlock();
     }
