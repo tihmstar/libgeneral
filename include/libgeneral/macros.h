@@ -43,7 +43,7 @@
 // -- logging --
 #ifndef CUSTOM_LOGGING
 #define info(a ...) ({printf(a),printf("\n");})
-#define log(a ...) ({printf(a),printf("\n");})
+//#define log(a ...) ({printf(a),printf("\n");}) //THIS SEEMS TO FUCK UP SOME STUFF IF IT GETS CONFUSED WITH MATHEMATICAL LOG() FUNCTION
 #define warning(a ...) ({printf("[WARNING] "), printf(a),printf("\n");})
 #define error(a ...) ({printf("[Error] "),printf(a),printf("\n");})
 #   ifdef DEBUG
