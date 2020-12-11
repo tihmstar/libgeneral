@@ -55,9 +55,13 @@
 #   include CUSTOM_LOGGING
 #endif
 
-#define safeFree(ptr) ({if (ptr) free(ptr),ptr=NULL;})
-#define safeFreeCustom(ptr,func) ({if (ptr) func(ptr),ptr=NULL;})
-#define safeFreeConst(ptr) ({if(void *fbuf = (void*)ptr){ptr = NULL; free(fbuf);}})
+#define safeFree(ptr) ({if (ptr) {free(ptr); ptr=NULL;}})
+#define safeFreeCustom(ptr,func) ({if (ptr) {func(ptr); ptr=NULL;}})
+#define safeFreeConst(ptr) ({if(ptr){void *fbuf = (void*)ptr;ptr = NULL; free(fbuf);}})
+
+#ifdef __cplusplus
+#   define safeDelete(ptr) ({if (ptr) {delete ptr; ptr=NULL;}})
+#endif
 
 #ifdef __cplusplus
 #include <functional>
