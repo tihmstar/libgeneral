@@ -21,6 +21,8 @@ namespace tihmstar {
     public:
         exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err ...);
         
+        exception(const exception &e); //copy constructor
+        
         //custom error can be used
         const char *what();
         

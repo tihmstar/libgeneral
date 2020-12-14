@@ -19,12 +19,27 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
     _line(line),
     _filename(filename),
     _err(NULL)
-    {
-        va_list ap = {};
-        va_start(ap, err);
-        vasprintf(&_err, err, ap);
-        va_end(ap);
-    };
+{
+    va_list ap = {};
+    va_start(ap, err);
+    vasprintf(&_err, err, ap);
+    va_end(ap);
+};
+
+exception::exception(const exception &e) :    //copy constructor
+_commit_count_str(e._commit_count_str),
+_commit_sha_str(e._commit_sha_str),
+_line(e._line),
+_filename(e._filename),
+_err(NULL)
+{
+    if (e._err) {
+        size_t len = strlen(e._err);
+        _err = (char*)malloc(len+1);
+        strncpy(_err, e._err, len);
+        _err[len] = '\0';
+    }
+}
 
 const char *exception::what(){
     return _err;
