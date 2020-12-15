@@ -41,7 +41,7 @@ _err(NULL)
     }
 }
 
-const char *exception::what(){
+const char *exception::what() const _NOEXCEPT {
     return _err;
 }
 
