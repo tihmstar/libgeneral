@@ -24,7 +24,7 @@ namespace tihmstar {
         exception(const exception &e); //copy constructor
         
         //custom error can be used
-        virtual const char *what() const _NOEXCEPT override;
+        virtual const char *what() const noexcept override;
         
         /*
          -first lowest two bytes of code is sourcecode line
