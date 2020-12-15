@@ -8,7 +8,7 @@
 
 #include "../include/libgeneral/macros.h"
 #include "../include/libgeneral/exception.hpp"
-#include <string>
+#include <string.h>
 #include <stdarg.h>
 
 using namespace tihmstar;
