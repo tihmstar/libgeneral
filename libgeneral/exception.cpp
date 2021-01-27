@@ -41,6 +41,10 @@ _err(NULL)
     }
 }
 
+exception::~exception(){
+    safeFree(_err);
+}
+
 const char *exception::what() const noexcept {
     return _err;
 }
@@ -66,7 +70,3 @@ std::string exception::build_commit_count() const {
 std::string exception::build_commit_sha() const {
     return _commit_sha_str;
 };
-
-exception::~exception(){
-    safeFree(_err);
-}
