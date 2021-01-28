@@ -52,7 +52,7 @@ public:
 
 ## Good and Bad C++ features
 C++ offers a variety of features. If you try to use every single of them in all of your projects,
-chances are that people will build up a deep hatred and aggression towards (at least so i was told).
+chances are that people will build up a deep hatred and aggression towards you (at least so i was told).
 Here is a list of do's and dont's:
 
 ### C++ discouraged features
