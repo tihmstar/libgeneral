@@ -13,15 +13,15 @@ In the following i will present the coding guidelines which should be considered
 # Coding guidelines
 There are some differences in C vs. C++ which will be noted accordingly.
 
-When using C++ the general policy should be to now use raw pointers or raw memory in first place,
-however since this is rarely possible in practise here are some guidelines on how to do so properly.
+When using C++ the general policy should be to not use raw pointers or raw memory in first place,
+however since this is rarely possible in practice here are some guidelines on how to do so properly.
 
 ## Coding Style / Functions
-Put open curly brackets `{` in the same line as close brackets `)`.
+Put opening curly brackets `{` in the same line as closing brackets `)`.
 
 Thus prefer this:
 ```C
-void empty(int a){ //Good: open curly bracket in same line as close bracket
+void empty(int a){ //Good: opening curly bracket in same line as closing bracket
 
 }
 ```
@@ -29,7 +29,7 @@ void empty(int a){ //Good: open curly bracket in same line as close bracket
 Over this:
 ```C
 void empty(int a)
-{ //Bad: open curly backet in different line than close bracket
+{ //Bad: opening curly backet in different line than closing bracket
 
 }
 ```
@@ -304,6 +304,23 @@ plist_t Muxer::getClientPlist(Client *client) noexcept{
 }
 ```
 
+### Emtpy scopes
+Purposely empty scopes such as class constructors with no code in the function body, or empty (try-)catch constructs should be explicitly annotated with `//`.
+
+Example:
+```C++
+try{
+  function_that_may_throw()
+}catch(...){
+  //
+}
+/*
+  Emtpy catch construct marked with "//" explicitly states that
+  we purposefully ignore the case where function_that_may_throw() fails.
+*/
+```
+
+
 ## Classes
 When creating classes, the access should be generally defined in the following order:
 - private
@@ -376,11 +393,11 @@ in the initializer part using the `:`.
 The following style should be used:
 - class definition then newline
 - colon `:` (for noting variable initialization) followed by all the variables from header in order of declaration then newline
-- open curly bracket `{`
+- opening curly bracket `{`
 - constructor body or `//` when empty, then newline
 - close curly bracket `}`
 
-Note: This is an exception of the general rule of putting the open curly bracket `{` at the same line as the preceding close bracket `)`.
+Note: This is an exception of the general rule of putting the opening curly bracket `{` at the same line as the preceding closing bracket `)`.
 
 Example:
 ```C++
