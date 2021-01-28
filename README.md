@@ -60,28 +60,28 @@ Here is a list of do's and dont's:
 While this is probably one of the first and biggest things to C++ to learn for people coming from C,
 i personally don't really like streams.
 The idea is of putting data in and out a stream might be a fun gimmick on a abstraction level,
-i feel like it is often not really practical.
+but i feel like it is often not really practical.
 
 These things tend to be confusing really quickly:  
 eg. How do i read from `b` to `a`? Is it `a << b;` or `a >> b;`?    
-Furthermore `a << b;` is usually not the same as `b >> a;`
+Furthermore `a << b;` is usually not the same as `b >> a;`.
 
-Also things formatting is usually a pita, here `printf("0x%016llx %zu %lld %d\n\n%s\n",...)` is just easier.
+Also formatting is usually a pita, here `printf("0x%016llx %zu %lld %d\n\n%s\n",...)` is just easier.
 
-##### Thus, use printf instead of streams !#####
+##### Thus, use printf instead of streams !
 
 ### C++ encouraged features
 #### Exceptions
 While there are a lot of split opinions about exceptions, i think that if used properly they are a great tool. That being said, in **libgeneral** wrappers are used, so that the programmer doesn't need to do raw constructing/throwing of exception.   
-However the programmer needs to be aware of the fact that an exception could be thrown at any point in time, which can be at any function invocation.
+However the programmer needs to be aware of the fact that an exception can be thrown at any point in time, which could be at any function invocation.
 I view this as an advantage, since it allows to do implicit error handling.
 Generally speaking a programmer should error-check every function that is called and handle possible failures accordingly (not every function error is fatal). When a programmer expects that a function
 could fail, then a `try{}catch(...){}` should be used to account for the fact.
-However sometimes a programmer might forget to check for a failed function invocation, which might be be at a fatal point in time. In this case the only sane response is to terminate the program and show the error for debugging purposes. If not handled this way, subtle failures may lead to deeply nested, hard to find and debug, bugs; which may end up compromising security of a system.
+However sometimes a programmer might forget to check whether a function invocation failed, which might be at a fatal point in time. In this case the only sane response is to terminate the program and show the error for debugging purposes. If not handled this way, subtle failures may lead to deeply nested, hard to find and debug, bugs; which may end up compromising security of a system.
 
 #### Traditional C error checking
-In **C** a function which might fail should always return an integer to indicate success return value of `0` or an error code which is any value other than zero (usually negative values).
-Function which usually return values other than `0` (or `NULL`) should use this to indicate and error
+In **C** a function which can fail should always return an integer to indicate success return value of `0` or an error code which is any value other than zero (usually negative values).
+Functions which usually return values other than `0` (or `NULL`) should use this to indicate and error
 (for example like `malloc()`).   
 When no special values can be reserved for error checking because all return values might be valid,
 a function shall fall back to indicate success(or failure) by returning and `int` and return the actual value by a pointer reference instead.   
@@ -154,7 +154,7 @@ ASN1DERElement ASN1DERElement::makeASN1Integer(uint64_t num){
 
 ## Error checking
 Programs should be written in a way that every line in every function is guaranteed to succeed before the next line executes. For example we need to guarantee that a buffer allocation succeeded, before we use the buffer for reading/writing. It should be assumed that every function can fail and throw, unless `noexcept` is specified, in which case we can safely expect a function not to throw.
-When `noexcept` is used, a function may still fail and indicate failure through other means (eg. C-style error return codes). Although it is discouraged to fallback to such error checking mechanism, unless there is a very good reason to do so (eg in c-style callbacks which don't except a function to throw).   
+When `noexcept` is used, a function may still fail and indicate failure through other means (eg. C-style error return codes). Although it is discouraged to fallback to such error checking mechanism, unless there is a very good reason to do so (eg in C-style callbacks which don't except a function to throw).   
 For a clean and readable error checking the macro `assure` and its variants should be used.
 The macro `assure` takes a condition and throws an error, when the condition is false.
 
@@ -193,6 +193,8 @@ insn vmem::operator++(){
 ### C-style error checking
 Since we can't use exceptions in C, the following construct should be used.
 At first initialize a reserved variable `int err = 0;`, which will be used for error handling by the macros. At the bottom of the function declare a label `error:` which will be jumped to in case of failure, or reached on function end. Here all cleanup should be performed.
+You should **not** return in the middle of the function since then resources might not get cleaned up properly, thus **always** return **only** by reaching the end of the function.
+If you need to skip some part of the function, use a `goto error;` instead.
 Optionally you can check `err` for a value other than `0` and perform custom error logging and do additional error case handling.   
 Finally return `err` if the return value is used solely for error checking.
 If the function returns a pointer on success and `err` is != `0` you shall
@@ -225,9 +227,10 @@ Example:
 Similar to regular variables, pointers should be initialized with `NULL` at the beginning of a function/scope.
 Immediately after, the `cleanup` construct should be used to free/cleanup the memory.
 Pointers should be declared in the order in which the allocation/resource aquisition is planned and
-should be release in the **reverse** order.
-All pointers which are allocated/aquired within the current scope, should be delared **above** the `cleanup` construct, while all pointers and variables which do not required cleanup (eg. constant pointers or scalar variables) should be declared **below** the `cleanup` construct.   
-For cleanup the `safeFree` macro (or its corresponding variations) should be used.
+should be released in the **reverse** order.
+All pointers which are allocated/aquired within the current scope, should be delared **above** the `cleanup` construct, while all pointers and variables which do not require cleanup (eg. constant pointers or scalar variables) should be declared **below** the `cleanup` construct.
+An exception to this are variables which itself do not required cleanup, but are required to properly cleanup other variables (eg. for `void kfree(void *ptr, size_t size)`).
+For cleanup the `safeFree` macro (or its corresponding variations) should be used whenever possible.
 
 Example:
 ```C++
@@ -395,7 +398,7 @@ The following style should be used:
 - colon `:` (for noting variable initialization) followed by all the variables from header in order of declaration then newline
 - opening curly bracket `{`
 - constructor body or `//` when empty, then newline
-- close curly bracket `}`
+- closing curly bracket `}`
 
 Note: This is an exception of the general rule of putting the opening curly bracket `{` at the same line as the preceding closing bracket `)`.
 
@@ -486,7 +489,7 @@ int exception::code() const{
 }
 ```
 
-The exception can also be catched as `std::exception`, however then only `const char * what()` and `int code()` are available.
+The exception can also be catched as `std::exception`, however then only `const char *what()` and `int code()` are available.
 The code is expected to be 4 bytes in size and tells you the line of failure in the sourcecode in the upper 2 bytes and the length of the source filename in the lower 2 bytes.
 
 When in a debugger it is recommended to turn on exception breakpoints, so that every failed assure which isn't caught (i.e. isn't expected to fail) causes the debugger to break at that exact line.
