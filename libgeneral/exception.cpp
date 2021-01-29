@@ -6,6 +6,8 @@
 //  Copyright © 2018 tihmstar. All rights reserved.
 //
 
+#define _GNU_SOURCE
+
 #include "../include/libgeneral/macros.h"
 #include "../include/libgeneral/exception.hpp"
 #include <string.h>
