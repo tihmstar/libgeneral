@@ -18,8 +18,8 @@ AC_SUBST([VERSION_COMMIT_SHA], ["m4_esyscmd([git rev-parse HEAD | tr -d '\n'])"]
 AC_PROG_CXX
 AC_PROG_CC
 
-CXXFLAGS+=" -std=gnu++11"
-CFLAGS+=" -std=gnu11"
+CXXFLAGS+=" -std=c++11"
+CFLAGS+=" -std=c11"
 
 AC_CONFIG_FILES([Makefile
                  include/Makefile
