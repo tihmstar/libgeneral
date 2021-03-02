@@ -6,8 +6,6 @@
 //  Copyright © 2018 tihmstar. All rights reserved.
 //
 
-#define _GNU_SOURCE
-
 #include "../include/libgeneral/macros.h"
 #include "../include/libgeneral/exception.hpp"
 #include <string.h>
@@ -21,12 +19,21 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
     _line(line),
     _filename(filename),
     _err(NULL)
+#ifdef WIN32
+{
+    va_list ap = {};
+    va_start(ap, err);
+    _err=(char*)malloc(1024);vasprintf(_err, err, ap);
+    va_end(ap);
+};
+#else
 {
     va_list ap = {};
     va_start(ap, err);
     vasprintf(&_err, err, ap);
     va_end(ap);
 };
+#endif
 
 exception::exception(const exception &e) :    //copy constructor
 _commit_count_str(e._commit_count_str),
