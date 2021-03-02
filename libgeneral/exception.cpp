@@ -19,21 +19,16 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
     _line(line),
     _filename(filename),
     _err(NULL)
-#ifdef WIN32
 {
-    va_list ap = {};
-    va_start(ap, err);
-    _err=(char*)malloc(1024);vsprintf(_err, err, ap);
-    va_end(ap);
+	va_list ap = {};
+	va_start(ap, err);
+	#ifdef WIN32
+	_err=(char*)malloc(1024);vsprintf(_err, err, ap);
+	else
+	vasprintf(&_err, err, ap);
+	#endif
+	va_end(ap);
 };
-#else
-{
-    va_list ap = {};
-    va_start(ap, err);
-    vasprintf(&_err, err, ap);
-    va_end(ap);
-};
-#endif
 
 exception::exception(const exception &e) :    //copy constructor
 _commit_count_str(e._commit_count_str),
