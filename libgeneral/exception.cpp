@@ -23,7 +23,7 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
 {
     va_list ap = {};
     va_start(ap, err);
-    _err=(char*)malloc(1024);vasprintf(_err, err, ap);
+    _err=(char*)malloc(1024);vsprintf(_err, err, ap);
     va_end(ap);
 };
 #else
