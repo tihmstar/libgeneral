@@ -58,6 +58,7 @@
 #define safeFree(ptr) ({if (ptr) {free(ptr); ptr=NULL;}})
 #define safeFreeCustom(ptr,func) ({if (ptr) {func(ptr); ptr=NULL;}})
 #define safeFreeConst(ptr) ({if(ptr){void *fbuf = (void*)ptr;ptr = NULL; free(fbuf);}})
+#define safeClose(fd) ({if(fd != -1){int cfd = fd; fd = -1; close(cfd);}})
 
 #ifdef __cplusplus
 #   define safeDelete(ptr) ({if (ptr) {delete ptr; ptr=NULL;}})
