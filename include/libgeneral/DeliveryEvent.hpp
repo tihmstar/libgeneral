@@ -73,7 +73,7 @@ namespace tihmstar {
 
         std::unique_lock<std::mutex> ul(_dataLock);
         while (!_dataQueue.size()) {
-            retassure(!_isDying, "object died while waiting on it");
+            retassure(!_isDying && !_isFinished, "object died while waiting on it");
             ul.unlock();
             _dataWait.wait();
 
