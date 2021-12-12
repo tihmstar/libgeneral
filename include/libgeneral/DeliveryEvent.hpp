@@ -110,8 +110,8 @@ namespace tihmstar {
             --_members;
             _membersUpdateEvent.notifyAll();
         });
-        _isFinished = true;
         _dataLock.lock();
+        _isFinished = true;
         if (!_dataQueue.size()) _isDying = true;
         _dataWait.notifyAll();
         _dataLock.unlock();
