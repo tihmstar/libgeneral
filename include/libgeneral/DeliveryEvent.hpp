@@ -80,7 +80,7 @@ namespace tihmstar {
             ul.lock();
         }
         T mydata = _dataQueue.front(); _dataQueue.pop();
-        if (!_dataQueue.size()) {
+        if (_isFinished && !_dataQueue.size()) {
             _isDying = true;
         }
         _dataWait.notifyAll();
