@@ -15,12 +15,12 @@
 namespace tihmstar {
     template <typename T>
     class DeliveryEvent{
-        bool _isDying;
+        std::atomic_bool _isDying;
+        std::atomic_bool _isFinished;
         std::atomic<uint64_t> _members;
         Event _membersUpdateEvent;
         
         Event _dataWait;
-        Event _dataIsFree;
         std::mutex _dataLock;
         std::queue<T> _dataQueue;
 
@@ -30,6 +30,12 @@ namespace tihmstar {
         
         T wait();
         void post(T data);
+        /*
+            Signalizes that no more data will be appended to this queue.
+            After the last element was dequed, kill() will be called.
+            further calls to post() are not allowed after this call.
+         */
+        void finish();
         
         /*
             Releases waiter and hints destruction of the object in near future
@@ -42,7 +48,7 @@ namespace tihmstar {
 
     template <class T>
     DeliveryEvent<T>::DeliveryEvent()
-    : _isDying(false),_members(0)
+    : _isDying(false),_isFinished(false),_members(0)
     {
         //
     }
@@ -58,7 +64,7 @@ namespace tihmstar {
 
     template <class T>
     T DeliveryEvent<T>::wait(){
-        assert(!_isDying);
+        assure(!_isDying);
         ++_members;
         cleanup([&]{
             --_members;
@@ -74,13 +80,16 @@ namespace tihmstar {
             ul.lock();
         }
         T mydata = _dataQueue.front(); _dataQueue.pop();
-        _dataIsFree.notifyAll();
+        if (!_dataQueue.size()) {
+            _isDying = true;
+        }
+        _dataWait.notifyAll();
         return mydata;
     }
 
     template <class T>
     void DeliveryEvent<T>::post(T data){
-        assert(!_isDying);
+        assure(!_isDying && !_isFinished);
         ++_members;
         cleanup([&]{
             --_members;
@@ -94,8 +103,23 @@ namespace tihmstar {
     }
 
     template <class T>
+    void DeliveryEvent<T>::finish(){
+        assure(!_isDying);
+        ++_members;
+        cleanup([&]{
+            --_members;
+            _membersUpdateEvent.notifyAll();
+        });
+        _isFinished = true;
+        _dataLock.lock();
+        if (!_dataQueue.size()) _isDying = true;
+        _dataWait.notifyAll();
+        _dataLock.unlock();
+    }
+
+    template <class T>
     void DeliveryEvent<T>::kill(){
-        assert(!_isDying);
+        assure(!_isDying);
         ++_members;
         cleanup([&]{
             --_members;
