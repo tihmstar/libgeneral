@@ -164,7 +164,7 @@ public:
 #   define CATCHFUNC(f) \
         do{ \
             try { \
-                f(); \
+                f; \
             } catch (tihmstar::exception &e) { \
                 error("%s: failed with exception:\n%s",PACKAGE_NAME,e.dumpStr().c_str()); \
                 exit(e.code()); \
