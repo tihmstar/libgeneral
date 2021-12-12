@@ -6,10 +6,13 @@
 //  Copyright © 2018 tihmstar. All rights reserved.
 //
 
+#define _GNU_SOURCE
+
 #include "../include/libgeneral/macros.h"
 #include "../include/libgeneral/exception.hpp"
 #include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 using namespace tihmstar;
 
@@ -40,10 +43,10 @@ _err(NULL)
         _err[len] = '\0';
     }
 }
-
 exception::~exception(){
     safeFree(_err);
 }
+
 
 const char *exception::what() const noexcept {
     return _err;
@@ -54,14 +57,31 @@ int exception::code() const{
 }
 
 void exception::dump() const{
-    printf("[exception]:\n");
-    printf("what=%s\n",_err);
-    printf("code=%d\n",code());
-    printf("line=%d\n",_line);
-    printf("file=%s\n",_filename.c_str());
-    printf("commit count=%s:\n",build_commit_count().c_str());
-    printf("commit sha  =%s:\n",build_commit_sha().c_str());
+    printf("%s",dumpStr().c_str());
 }
+
+std::string exception::dumpStr() const{
+    char *dumpstr = NULL;
+    cleanup([&]{
+        safeFree(dumpstr);
+    });
+    asprintf(&dumpstr, "[exception]:\n"
+                        "what=%s\n"
+                        "code=%d\n"
+                        "line=%d\n"
+                        "file=%s\n"
+                        "commit count=%s\n"
+                        "commit sha  =%s\n"
+                        ,_err
+                        ,code()
+                        ,_line
+                        ,_filename.c_str()
+                        ,build_commit_count().c_str()
+                        ,build_commit_sha().c_str()
+            );
+    return dumpstr;
+}
+
 
 std::string exception::build_commit_count() const {
     return _commit_count_str;
@@ -70,3 +90,4 @@ std::string exception::build_commit_count() const {
 std::string exception::build_commit_sha() const {
     return _commit_sha_str;
 };
+

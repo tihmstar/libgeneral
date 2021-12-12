@@ -146,6 +146,7 @@ public:
             int main_r(int argc, const char * argv[]); \
             return main_r(argc, argv); \
         }
+#   define CATCHFUNC(f) f()
 #else
 #   define MAINFUNCTION \
         int main(int argc, const char * argv[]) {  \
@@ -153,11 +154,25 @@ public:
             try { \
                 return main_r(argc, argv); \
             } catch (tihmstar::exception &e) { \
-                error("%s: failed with exception:\n",PACKAGE_NAME); \
-                e.dump(); \
+                error("%s: failed with exception:\n%s",PACKAGE_NAME,e.dumpStr().c_str()); \
                 return e.code(); \
+            } catch (std::exception &e) { \
+                error("%s: failed with std::exception (%s)",PACKAGE_NAME,e.what()); \
+                exit(-1); \
             } \
         }
+#   define CATCHFUNC(f) \
+        do{ \
+            try { \
+                f(); \
+            } catch (tihmstar::exception &e) { \
+                error("%s: failed with exception:\n%s",PACKAGE_NAME,e.dumpStr().c_str()); \
+                exit(e.code()); \
+            } catch (std::exception &e) { \
+                error("%s: failed with std::exception (%s)",PACKAGE_NAME,e.what()); \
+                exit(-1); \
+            } \
+        }while (0)
 #endif
 
 #endif /* macros_h */

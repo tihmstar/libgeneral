@@ -10,6 +10,7 @@
 #define exception_hpp
 
 #include <string>
+#include <stdarg.h>
 
 namespace tihmstar {
     class exception : public std::exception{
@@ -18,10 +19,12 @@ namespace tihmstar {
         int _line;
         std::string _filename;
         char *_err;
+        
     public:
         exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err ...);
-        exception(const exception &cpy); //copy constructor
-        virtual ~exception() override;
+        exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err, va_list ap);
+
+        exception(const exception &e); //copy constructor
         
         //custom error can be used
         virtual const char *what() const noexcept override;
@@ -33,10 +36,13 @@ namespace tihmstar {
         int code() const;
         
         virtual void dump() const;
-        
+        virtual std::string dumpStr() const;
+
         //Information about build
         virtual std::string build_commit_count() const;
         virtual std::string build_commit_sha() const;
+        
+        ~exception();
     };
 };
 
