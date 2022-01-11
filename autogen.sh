@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #cleanup cache for correct versioning when run multiple times
 rm -rf autom4te.cache
