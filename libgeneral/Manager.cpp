@@ -6,8 +6,8 @@
 //  Copyright © 2020 tihmstar. All rights reserved.
 //
 
-#include "../include/libgeneral/exception.hpp"
 #include "../include/libgeneral/macros.h"
+#include "../include/libgeneral/exception.hpp"
 #include "../include/libgeneral/Manager.hpp"
 #include "../include/libgeneral/Event.hpp"
 #include <unistd.h>

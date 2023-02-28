@@ -267,6 +267,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					XCODE,
 				);
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/include";
 				PRODUCT_NAME = "$(TARGET_NAME)";

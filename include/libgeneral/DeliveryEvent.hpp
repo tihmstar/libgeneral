@@ -15,12 +15,12 @@
 namespace tihmstar {
     template <typename T>
     class DeliveryEvent{
-        std::atomic_bool _isDying;
-        std::atomic_bool _isFinished;
+        bool _isDying;
         std::atomic<uint64_t> _members;
         Event _membersUpdateEvent;
         
         Event _dataWait;
+        Event _dataIsFree;
         std::mutex _dataLock;
         std::queue<T> _dataQueue;
 
@@ -30,12 +30,6 @@ namespace tihmstar {
         
         T wait();
         void post(T data);
-        /*
-            Signalizes that no more data will be appended to this queue.
-            After the last element was dequed, kill() will be called.
-            further calls to post() are not allowed after this call.
-         */
-        void finish();
         
         /*
             Releases waiter and hints destruction of the object in near future
@@ -48,23 +42,18 @@ namespace tihmstar {
 
     template <class T>
     DeliveryEvent<T>::DeliveryEvent()
-    : _isDying(false),_isFinished(false),_members(0)
+    : _isDying(false),_members(0)
     {
         //
     }
 
     template <class T>
     DeliveryEvent<T>::~DeliveryEvent(){
-        _isDying = true;
-        while ((uint64_t)_members > 0) {
-            _dataWait.notifyAll(); //release waiter
-            _membersUpdateEvent.wait();
-        }
+        kill();
     }
 
     template <class T>
     T DeliveryEvent<T>::wait(){
-        assure(!_isDying);
         ++_members;
         cleanup([&]{
             --_members;
@@ -73,23 +62,19 @@ namespace tihmstar {
 
         std::unique_lock<std::mutex> ul(_dataLock);
         while (!_dataQueue.size()) {
-            retassure(!_isDying && !_isFinished, "object died while waiting on it");
+            retassure(!_isDying, "object died while waiting on it");
             ul.unlock();
             _dataWait.wait();
 
             ul.lock();
         }
         T mydata = _dataQueue.front(); _dataQueue.pop();
-        if (_isFinished && !_dataQueue.size()) {
-            _isDying = true;
-        }
-        _dataWait.notifyAll();
+        _dataIsFree.notifyAll();
         return mydata;
     }
 
     template <class T>
     void DeliveryEvent<T>::post(T data){
-        assure(!_isDying && !_isFinished);
         ++_members;
         cleanup([&]{
             --_members;
@@ -103,32 +88,15 @@ namespace tihmstar {
     }
 
     template <class T>
-    void DeliveryEvent<T>::finish(){
-        assure(!_isDying);
-        ++_members;
-        cleanup([&]{
-            --_members;
-            _membersUpdateEvent.notifyAll();
-        });
-        _dataLock.lock();
-        _isFinished = true;
-        if (!_dataQueue.size()) _isDying = true;
-        _dataWait.notifyAll();
-        _dataLock.unlock();
-    }
-
-    template <class T>
     void DeliveryEvent<T>::kill(){
-        assure(!_isDying);
-        ++_members;
-        cleanup([&]{
-            --_members;
-            _membersUpdateEvent.notifyAll();
-        });
+        std::unique_lock<std::mutex> ul(_dataLock);
         _isDying = true;
-        _dataLock.lock();
-        _dataWait.notifyAll();
-        _dataLock.unlock();
+        while ((uint64_t)_members > 0) {
+            _dataWait.notifyAll(); //release waiter
+            ul.unlock();
+            _membersUpdateEvent.wait();
+            ul.lock();
+        }
     }
 };
 

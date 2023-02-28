@@ -21,6 +21,17 @@ AC_PROG_CC
 CXXFLAGS+=" -std=c++11"
 CFLAGS+=" -std=c11"
 
+# Check for operating system
+AC_MSG_CHECKING([whether we need platform-specific build settings])
+case $host_os in
+  darwin* )
+      CXXFLAGS+=" -stdlib=libc++"
+      ;;
+  mingw32*)
+        LDFLAGS+=" -no-undefined -lpthread"
+        ;;
+esac
+
 AC_CONFIG_FILES([Makefile
                  include/Makefile
                  libgeneral.pc

@@ -9,17 +9,17 @@
 #ifndef macros_h
 #define macros_h
 
-#include <assert.h>
-
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
 #endif //HAVE_CONFIG_H
 
+#include <assert.h>
+
 #ifndef VERSION_COMMIT_COUNT
-#   define VERSION_COMMIT_COUNT "Debug"
+#   define VERSION_COMMIT_COUNT "VERSION_COMMIT_COUNT_not_set"
 #endif
 #ifndef VERSION_COMMIT_SHA
-#   define VERSION_COMMIT_SHA "Build: " __DATE__ " " __TIME__
+#   define VERSION_COMMIT_SHA "VERSION_COMMIT_SHA_not_set Build: " __DATE__ " " __TIME__
 #endif
 
 #ifndef PACKAGE_NAME
@@ -43,14 +43,57 @@
 
 // -- logging --
 #ifndef CUSTOM_LOGGING
-#   define info(a ...) ({printf(a),printf("\n");})
-#   define warning(a ...) ({printf("[WARNING] "), printf(a),printf("\n");})
-#   define error(a ...) ({printf("[Error] "),printf(a),printf("\n");})
-#   ifdef DEBUG
-#       define debug(a ...) ({printf("[DEBUG] "),printf(a),printf("\n");})
-#   else
-#       define debug(a ...)
+#   ifdef HAVE_FSEEKO
+#       define _LARGEFILE_SOURCE //needs to be defined before including stdio.h
 #   endif
+#   include <stdio.h>
+#   ifndef LIBGENERAL_NO_COMPLEX_LOGGING
+#       include <stdarg.h>
+#       include <stdlib.h>
+#       include <string.h>
+inline int libgeneral_log(const char *prefix, const char *fmt, ...){
+    char *fs = NULL;
+    int ret = 0;
+    size_t len = 0;
+    if (prefix) len += strlen(prefix);
+    else len += 10; //"(NULL)"
+    
+    if (fmt) len += strlen(fmt);
+    else len += 10; //"(NULL)"
+    
+    len += 2; //"\n\0"
+    
+    fs = (char*)malloc(len);
+    if (!fs) return -1;
+    
+    snprintf(fs, len, "%s%s\n",prefix,fmt);
+    {
+        va_list ap;
+        va_start(ap, fmt);
+        ret = vprintf(fs, ap);
+        va_end(ap);
+    }
+    free(fs);
+    return ret;
+}
+#      define info(a ...) libgeneral_log("",a)
+#      define warning(a ...) libgeneral_log("[WARNING] ",a)
+#      define error(a ...) libgeneral_log("[Error] ",a)
+#       ifdef DEBUG
+#           define debug(a ...) libgeneral_log("[DEBUG] ",a)
+#       else
+#           define debug(a ...)
+#       endif
+#else
+#      define info(a ...) ({printf(a),printf("\n");})
+#      define warning(a ...) ({printf("[WARNING] "), printf(a),printf("\n");})
+#      define error(a ...) ({printf("[Error] "),printf(a),printf("\n");})
+#       ifdef DEBUG
+#           define debug(a ...) ({printf("[DEBUG] "),printf(a),printf("\n");})
+#       else
+#           define debug(a ...)
+#       endif
+#   endif //LIBGENERAL_NO_COMPLEX_LOGGING
 #else //CUSTOM_LOGGING
 #   include CUSTOM_LOGGING
 #endif //CUSTOM_LOGGING
@@ -96,12 +139,6 @@
 #   define reterror(errstr ...) do{ throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, LIBGENERAL__FILE__, LIBGENERAL_ERRSTR(errstr)); } while(0)
 #   define retcustomerror(custom_except,errstr ...) do{ throw tihmstar::custom_except(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, LIBGENERAL__FILE__, LIBGENERAL_ERRSTR(errstr)); } while(0)
 #   define doassure(cond,code) do {if (!(cond)){(code);assure(cond);}} while(0)
-//mach assures
-#   define assureMach(kernRet) do {kern_return_t __kret = kernRet; if (__kret) throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, LIBGENERAL__FILE__, LIBGENERAL_ERRSTR("assure failed"));} while(0)
-#   define assureMachclean(kernRet) do {kern_return_t __kret = kernRet; if (__kret){clean();assureMach(__kret);}} while(0)
-#   define assureCatchClean(code) do {try { code; } catch (EXPECTIONNAME &e) { clean(); throw; }} while (0)
-#   define assureNoDoublethrow(code) \
-        do{try {code;} catch (EXPECTIONNAME &e) {if (isInException) {error(LIBGENERAL_ERRSTR("Double exception! Error in line=%d",__LINE__));}else{throw;}}}while (0)
 
 //DEBUG assures
 #ifdef DEBUG
@@ -162,7 +199,7 @@ public:
 #   define CATCHFUNC(f) \
         do{ \
             try { \
-                f; \
+                f(); \
             } catch (tihmstar::exception &e) { \
                 error("%s: failed with exception:\n%s",PACKAGE_NAME,e.dumpStr().c_str()); \
                 exit(e.code()); \

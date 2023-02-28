@@ -12,8 +12,10 @@
 #include "lck_container.hpp"
 #include "Manager.hpp"
 
-int main(int argc, const char * argv[]) {
+MAINFUNCTION
+int main_r(int argc, const char * argv[]) {
     // insert code here...
     printf("Hello, World!\n");
     return 0;
 }
+

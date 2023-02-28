@@ -6,7 +6,9 @@
 //  Copyright © 2018 tihmstar. All rights reserved.
 //
 
-#define _GNU_SOURCE
+#ifndef _GNU_SOURCE
+#   define _GNU_SOURCE
+#endif
 
 #include "../include/libgeneral/macros.h"
 #include "../include/libgeneral/exception.hpp"
@@ -27,6 +29,16 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
     va_start(ap, err);
     vasprintf(&_err, err, ap);
     va_end(ap);
+};
+
+exception::exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, va_list ap, const char *err) :
+    _commit_count_str(commit_count_str),
+    _commit_sha_str(commit_sha_str),
+    _line(line),
+    _filename(filename),
+    _err(NULL)
+{
+    vasprintf(&_err, err, ap);
 };
 
 exception::exception(const exception &e) :    //copy constructor

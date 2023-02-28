@@ -22,7 +22,7 @@ namespace tihmstar {
         
     public:
         exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err ...);
-        exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, const char *err, va_list ap);
+        exception(const char *commit_count_str, const char *commit_sha_str, int line, const char *filename, va_list ap, const char *err);
 
         exception(const exception &e); //copy constructor
         
