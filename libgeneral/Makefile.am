@@ -8,6 +8,9 @@ lib_LTLIBRARIES = libgeneral.la
 libgeneral_la_CFLAGS = $(AM_CFLAGS)
 libgeneral_la_CXXFLAGS = $(AM_CXXFLAGS)
 libgeneral_la_LDFLAGS = $(AM_LDFLAGS)
-libgeneral_la_SOURCES = exception.cpp \
-												Event.cpp \
-												Manager.cpp
+libgeneral_la_SOURCES = exception.cpp
+
+if !BUILD_MINIMAL
+libgeneral_la_SOURCES += Event.cpp \
+						 Manager.cpp
+endif

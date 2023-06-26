@@ -109,7 +109,9 @@ inline int libgeneral_log(const char *prefix, const char *fmt, ...){
 #endif //__cplusplus
 
 #ifdef __cplusplus
-#   include <functional>
+#   ifndef DONT_HAVE_FUNCTIONAL
+#       include <functional>
+#   endif
 #   ifndef NO_EXCEPT_ASSURE
 #       define EXCEPT_ASSURE
 #   endif
@@ -163,6 +165,7 @@ inline int libgeneral_log(const char *prefix, const char *fmt, ...){
 #       define EXPECTIONNAME exception
 #   endif
 
+#   ifndef DONT_HAVE_FUNCTIONAL
 class guard{
     std::function<void()> _f;
 public:
@@ -172,7 +175,8 @@ public:
     
     ~guard(){_f();}
 };
-#   define cleanup(f) guard _cleanup(f);
+#       define cleanup(f) guard _cleanup(f);
+#   endif
 #endif //EXCEPT_ASSURE
 
 #ifdef XCODE

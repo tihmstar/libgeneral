@@ -25,12 +25,31 @@ CFLAGS+=" -std=c11"
 AC_MSG_CHECKING([whether we need platform-specific build settings])
 case $host_os in
   darwin* )
-      CXXFLAGS+=" -stdlib=libc++"
+      AC_LANG_PUSH([C++])
+      AC_CHECK_HEADER([functional],[
+        CXXFLAGS+=" -stdlib=libc++" # normal case
+      ],[
+        CXXFLAGS+=" -stdlib=libstdc++" # iOS 6 (very old lib) case
+      ])
+      AC_LANG_POP([C++])
+      AC_CHECK_HEADER([functional],[],[AC_DEFINE([DONT_HAVE_FUNCTIONAL],[1],[Define if you DONT have <functional>])])
       ;;
   mingw32*)
         LDFLAGS+=" -no-undefined -lpthread"
         ;;
 esac
+
+AC_ARG_WITH([extras],
+            [AS_HELP_STRING([--without-extras],
+            [build only minimal lib @<:@default=no@:>@])],
+            [build_minimal=yes],
+            [build_minimal=no])
+
+
+if test "x$build_minimal" == "xyes"; then
+  AC_DEFINE(BUILD_MINIMAL, 1, [Define if you're building minimal lib])
+fi
+AM_CONDITIONAL(BUILD_MINIMAL, test x$build_minimal == xyes)
 
 AC_CONFIG_FILES([Makefile
                  include/Makefile
@@ -43,7 +62,8 @@ echo "
 Configuration for $PACKAGE-$VERSION:
 -------------------------------------------
 
-  install prefix ..........: $prefix"
+  install prefix ..........: $prefix
+  minimal lib .............: $build_minimal"
 echo "  compiler ................: ${CC}
 
   Now type 'make' to build $PACKAGE-$VERSION,

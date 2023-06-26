@@ -74,9 +74,6 @@ void exception::dump() const{
 
 std::string exception::dumpStr() const{
     char *dumpstr = NULL;
-    cleanup([&]{
-        safeFree(dumpstr);
-    });
     asprintf(&dumpstr, "[exception]:\n"
                         "what=%s\n"
                         "code=%d\n"
@@ -91,7 +88,11 @@ std::string exception::dumpStr() const{
                         ,build_commit_count().c_str()
                         ,build_commit_sha().c_str()
             );
-    return dumpstr;
+    {
+        std::string ret = dumpstr;
+        safeFree(dumpstr);
+        return ret;
+    }
 }
 
 
