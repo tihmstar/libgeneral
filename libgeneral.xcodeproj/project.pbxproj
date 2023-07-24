@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AFE684E2A5FE471005E388C /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE684C2A5FE471005E388C /* Utils.cpp */; };
 		876A59052563C1FA00193244 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 876A59042563C1FA00193244 /* Event.cpp */; };
 		876A59172563C67300193244 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 876A59152563C67300193244 /* Manager.cpp */; };
 		87977F73227C4B71004F31DA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87977F72227C4B71004F31DA /* main.cpp */; };
@@ -26,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2AFE684C2A5FE471005E388C /* Utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
+		2AFE684D2A5FE471005E388C /* Utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Utils.hpp; path = ../include/libgeneral/Utils.hpp; sourceTree = "<group>"; };
 		876A59042563C1FA00193244 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		876A590F2563C54300193244 /* lck_container.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = lck_container.hpp; path = include/libgeneral/lck_container.hpp; sourceTree = SOURCE_ROOT; };
 		876A59102563C54300193244 /* DeliveryEvent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DeliveryEvent.hpp; path = include/libgeneral/DeliveryEvent.hpp; sourceTree = SOURCE_ROOT; };
@@ -72,6 +75,8 @@
 				87977F7C227C4BD3004F31DA /* macros.h */,
 				87977F79227C4B99004F31DA /* exception.hpp */,
 				87977F7A227C4BA1004F31DA /* exception.cpp */,
+				2AFE684D2A5FE471005E388C /* Utils.hpp */,
+				2AFE684C2A5FE471005E388C /* Utils.cpp */,
 				876A59112563C54300193244 /* Event.hpp */,
 				876A59042563C1FA00193244 /* Event.cpp */,
 				876A59102563C54300193244 /* DeliveryEvent.hpp */,
@@ -142,6 +147,7 @@
 				876A59052563C1FA00193244 /* Event.cpp in Sources */,
 				87977F73227C4B71004F31DA /* main.cpp in Sources */,
 				87977F7B227C4BA1004F31DA /* exception.cpp in Sources */,
+				2AFE684E2A5FE471005E388C /* Utils.cpp in Sources */,
 				876A59172563C67300193244 /* Manager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

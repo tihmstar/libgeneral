@@ -132,7 +132,7 @@ inline int libgeneral_log(const char *prefix, const char *fmt, ...){
 #define creterror(errstr ...) do{error(LIBGENERAL_ERRSTR(errstr));err=__LINE__; goto error; }while(0)
 
 #ifdef EXCEPT_ASSURE
-#   include "exception.hpp"
+#   include <libgeneral/exception.hpp>
 //assure cpp
 #   define assure(cond) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__, LIBGENERAL__FILE__, LIBGENERAL_ERRSTR("assure failed")); } while(0)
 #   define retassure(cond, errstr ...) do{ if ((cond) == 0) throw tihmstar::EXPECTIONNAME(VERSION_COMMIT_COUNT, VERSION_COMMIT_SHA, __LINE__,LIBGENERAL__FILE__,LIBGENERAL_ERRSTR(errstr)); } while(0)
@@ -165,7 +165,8 @@ inline int libgeneral_log(const char *prefix, const char *fmt, ...){
 #       define EXPECTIONNAME exception
 #   endif
 
-#   ifndef DONT_HAVE_FUNCTIONAL
+#   if !@LIBGENERAL_CLEANUP_IS_DISABLED@ //LIBGENERAL_CLEANUP_IS_DISABLED
+#       ifndef DONT_HAVE_FUNCTIONAL
 class guard{
     std::function<void()> _f;
 public:
@@ -175,8 +176,9 @@ public:
     
     ~guard(){_f();}
 };
-#       define cleanup(f) guard _cleanup(f);
-#   endif
+#           define cleanup(f) guard _cleanup(f);
+#       endif //DONT_HAVE_FUNCTIONAL
+#   endif //LIBGENERAL_CLEANUP_IS_DISABLED
 #endif //EXCEPT_ASSURE
 
 #ifdef XCODE

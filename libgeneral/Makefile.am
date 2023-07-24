@@ -12,5 +12,6 @@ libgeneral_la_SOURCES = exception.cpp
 
 if !BUILD_MINIMAL
 libgeneral_la_SOURCES += Event.cpp \
-						 Manager.cpp
+						 Manager.cpp \
+						 Utils.cpp
 endif

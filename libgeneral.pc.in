@@ -8,4 +8,4 @@ Description: Mostly macros used by other projects
 
 Version: @VERSION_COMMIT_COUNT@
 Libs: -L${libdir} -lgeneral
-Cflags: -I${includedir}
+Cflags: -I${includedir} @cpp_lib_flags@
