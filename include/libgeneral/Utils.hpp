@@ -15,6 +15,7 @@
 namespace tihmstar {
     
 std::vector<uint8_t> readFile(const char *path);
+void writeFile(const char *path, std::vector<uint8_t> data);
 
 };
 
