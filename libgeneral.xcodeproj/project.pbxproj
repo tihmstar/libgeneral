@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A8900602AEBED4D00A8565C /* GuardAccess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A89005E2AEBED4D00A8565C /* GuardAccess.cpp */; };
+		2AC7AB902A8226F7004F21C9 /* Mem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AC7AB8E2A8226F7004F21C9 /* Mem.cpp */; };
 		2AFE684E2A5FE471005E388C /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE684C2A5FE471005E388C /* Utils.cpp */; };
 		876A59052563C1FA00193244 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 876A59042563C1FA00193244 /* Event.cpp */; };
 		876A59172563C67300193244 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 876A59152563C67300193244 /* Manager.cpp */; };
@@ -27,10 +29,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2A89005E2AEBED4D00A8565C /* GuardAccess.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GuardAccess.cpp; sourceTree = "<group>"; };
+		2A89005F2AEBED4D00A8565C /* GuardAccess.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = GuardAccess.hpp; path = ../include/libgeneral/GuardAccess.hpp; sourceTree = "<group>"; };
+		2A9AA6042A7D227000353728 /* ByteOrder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = ByteOrder.hpp; path = ../include/libgeneral/ByteOrder.hpp; sourceTree = "<group>"; };
+		2AC5D3E02A8A2B3800835DCF /* ByteOrder.hpp.in */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp.preprocessed; name = ByteOrder.hpp.in; path = include/libgeneral/ByteOrder.hpp.in; sourceTree = SOURCE_ROOT; };
+		2AC7AB8E2A8226F7004F21C9 /* Mem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mem.cpp; sourceTree = "<group>"; };
+		2AC7AB8F2A8226F7004F21C9 /* Mem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Mem.hpp; path = ../include/libgeneral/Mem.hpp; sourceTree = "<group>"; };
+		2ACF139D2AE90CA6000315EE /* macros.h.in */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c.preprocessed; name = macros.h.in; path = include/libgeneral/macros.h.in; sourceTree = SOURCE_ROOT; };
 		2AFE684C2A5FE471005E388C /* Utils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 		2AFE684D2A5FE471005E388C /* Utils.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Utils.hpp; path = ../include/libgeneral/Utils.hpp; sourceTree = "<group>"; };
 		876A59042563C1FA00193244 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
-		876A590F2563C54300193244 /* lck_container.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = lck_container.hpp; path = include/libgeneral/lck_container.hpp; sourceTree = SOURCE_ROOT; };
 		876A59102563C54300193244 /* DeliveryEvent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = DeliveryEvent.hpp; path = include/libgeneral/DeliveryEvent.hpp; sourceTree = SOURCE_ROOT; };
 		876A59112563C54300193244 /* Event.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Event.hpp; path = include/libgeneral/Event.hpp; sourceTree = SOURCE_ROOT; };
 		876A59152563C67300193244 /* Manager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Manager.cpp; sourceTree = "<group>"; };
@@ -72,7 +80,10 @@
 		87977F71227C4B71004F31DA /* libgeneral */ = {
 			isa = PBXGroup;
 			children = (
+				2ACF139D2AE90CA6000315EE /* macros.h.in */,
 				87977F7C227C4BD3004F31DA /* macros.h */,
+				2AC5D3E02A8A2B3800835DCF /* ByteOrder.hpp.in */,
+				2A9AA6042A7D227000353728 /* ByteOrder.hpp */,
 				87977F79227C4B99004F31DA /* exception.hpp */,
 				87977F7A227C4BA1004F31DA /* exception.cpp */,
 				2AFE684D2A5FE471005E388C /* Utils.hpp */,
@@ -80,9 +91,12 @@
 				876A59112563C54300193244 /* Event.hpp */,
 				876A59042563C1FA00193244 /* Event.cpp */,
 				876A59102563C54300193244 /* DeliveryEvent.hpp */,
-				876A590F2563C54300193244 /* lck_container.hpp */,
+				2A89005F2AEBED4D00A8565C /* GuardAccess.hpp */,
+				2A89005E2AEBED4D00A8565C /* GuardAccess.cpp */,
 				876A591A2563C95300193244 /* Manager.hpp */,
 				876A59152563C67300193244 /* Manager.cpp */,
+				2AC7AB8F2A8226F7004F21C9 /* Mem.hpp */,
+				2AC7AB8E2A8226F7004F21C9 /* Mem.cpp */,
 				87977F72227C4B71004F31DA /* main.cpp */,
 			);
 			path = libgeneral;
@@ -144,9 +158,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A8900602AEBED4D00A8565C /* GuardAccess.cpp in Sources */,
 				876A59052563C1FA00193244 /* Event.cpp in Sources */,
 				87977F73227C4B71004F31DA /* main.cpp in Sources */,
 				87977F7B227C4BA1004F31DA /* exception.cpp in Sources */,
+				2AC7AB902A8226F7004F21C9 /* Mem.cpp in Sources */,
 				2AFE684E2A5FE471005E388C /* Utils.cpp in Sources */,
 				876A59172563C67300193244 /* Manager.cpp in Sources */,
 			);

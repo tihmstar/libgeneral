@@ -11,12 +11,13 @@
 
 #include <stdint.h>
 #include <vector>
+#include <libgeneral/Mem.hpp>
 
 namespace tihmstar {
     
-std::vector<uint8_t> readFile(const char *path);
-void writeFile(const char *path, std::vector<uint8_t> data);
-
+Mem readFile(const char *path);
+void writeFile(const char *path, const void *mem, size_t memSize, int perm = 0644);
+bool fileExists(const char *path) noexcept;
 };
 
 #endif /* Utils_hpp */

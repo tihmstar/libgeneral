@@ -51,7 +51,7 @@
 #       include <stdarg.h>
 #       include <stdlib.h>
 #       include <string.h>
-inline int libgeneral_log(const char *prefix, const char *fmt, ...){
+static inline int libgeneral_log(const char *prefix, const char *fmt, ...){
     char *fs = NULL;
     int ret = 0;
     size_t len = 0;
@@ -102,6 +102,7 @@ inline int libgeneral_log(const char *prefix, const char *fmt, ...){
 #define safeFreeCustom(ptr,func) ({if (ptr) {func(ptr); ptr=NULL;}})
 #define safeFreeConst(ptr) ({if(ptr){void *fbuf = (void*)ptr;ptr = NULL; free(fbuf);}})
 #define safeClose(fd) ({if (fd != -1) {close(fd); fd=-1;}})
+#define safeCloseCustom(fd,func) ({if (fd != -1) {func(fd); fd=-1;}})
 
 
 #ifdef __cplusplus

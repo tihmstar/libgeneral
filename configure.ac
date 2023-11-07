@@ -52,10 +52,16 @@ case $host_os in
       ])
       AC_LANG_POP([C++])
       ;;
-  mingw32*)
+  *mingw*|*msys*)
         LDFLAGS+=" -no-undefined -lpthread"
         ;;
 esac
+
+AC_ARG_ENABLE([debug],
+            [AS_HELP_STRING([--enable-debug],
+            [enable debug build(default is no)])],
+            [debug_build=true],
+            [debug_build=false])
 
 AC_ARG_WITH([extras],
             [AS_HELP_STRING([--without-extras],
@@ -70,6 +76,25 @@ AC_ARG_ENABLE([cleanup],
             [cleanup_disabled=false])
 
 
+if test "$debug_build" = true; then
+  echo "*** Note: debug build requested ***"
+  CFLAGS+=" -g -O0 -DDEBUG=1"
+  CXXFLAGS+=" -g -O0 -DDEBUG=1"
+fi
+
+if test "x$build_minimal" == "xyes"; then
+  AC_DEFINE(BUILD_MINIMAL, 1, [Define if you're building minimal lib])
+fi
+AM_CONDITIONAL(BUILD_MINIMAL, test x$build_minimal == xyes)
+
+# Checks for header files.
+AC_CHECK_HEADERS([arpa/inet.h byteswap.h endian.h sys/param.h winsock.h])
+
+# Check for functions
+AC_CHECK_DECLS([htonll], [], [], [[#include <arpa/inet.h>]])
+
+
+#Generate Headers
 if test "x$cleanup_disabled" == "xtrue"; then
   AC_DEFINE(LIBGENERAL_CLEANUP_IS_DISABLED, 1, [Define if you want to disable 'cleanup' macro globally])
   AC_SUBST([LIBGENERAL_CLEANUP_IS_DISABLED], [1])
@@ -78,13 +103,45 @@ else
 fi
 AM_CONDITIONAL(LIBGENERAL_CLEANUP_IS_DISABLED, test x$cleanup_disabled == xtrue)
 
-if test "x$build_minimal" == "xyes"; then
-  AC_DEFINE(BUILD_MINIMAL, 1, [Define if you're building minimal lib])
+if test "x$ac_cv_header_arpa_inet_h" == "xyes"; then
+  AC_SUBST([HEADER_HAVE_ARPA_INET_H], [1])
+else
+  AC_SUBST([HEADER_HAVE_ARPA_INET_H], [0])
 fi
-AM_CONDITIONAL(BUILD_MINIMAL, test x$build_minimal == xyes)
+
+if test "x$ac_cv_header_byteswap_h" == "xyes"; then
+  AC_SUBST([HEADER_HAVE_BYTESWAP_H], [1])
+else
+  AC_SUBST([HEADER_HAVE_BYTESWAP_H], [0])
+fi
+
+if test "x$ac_cv_header_endian_h" == "xyes"; then
+  AC_SUBST([HEADER_HAVE_ENDIAN_H], [1])
+else
+  AC_SUBST([HEADER_HAVE_ENDIAN_H], [0])
+fi
+
+if test "x$ac_cv_header_sys_param_h" == "xyes"; then
+  AC_SUBST([HEADER_HAVE_SYS_PARAM_H], [1])
+else
+  AC_SUBST([HEADER_HAVE_SYS_PARAM_H], [0])
+fi
+
+if test "x$ac_cv_header_winsock_h" == "xyes"; then
+  AC_SUBST([HEADER_HAVE_WINSOCK_H], [1])
+else
+  AC_SUBST([HEADER_HAVE_WINSOCK_H], [0])
+fi
+
+if test "x$ac_cv_have_decl_htonll" == "xyes"; then
+  AC_SUBST([FUNC_HAVE_DECL_HTONLL], [1])
+else
+  AC_SUBST([FUNC_HAVE_DECL_HTONLL], [0])
+fi
 
 AC_CONFIG_FILES([Makefile
                  include/libgeneral/macros.h
+                 include/libgeneral/ByteOrder.hpp
                  include/Makefile
                  libgeneral.pc
                  libgeneral/Makefile])
@@ -97,6 +154,7 @@ Configuration for $PACKAGE-$VERSION:
 
   install prefix ..........: $prefix
   minimal lib .............: $build_minimal
+  debug build  ............: $debug_build
   disable cleanup macro ...: $cleanup_disabled"
 echo "  compiler ................: ${CC}
 

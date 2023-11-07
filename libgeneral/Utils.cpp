@@ -14,27 +14,34 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-std::vector<uint8_t> tihmstar::readFile(const char *path){
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
+tihmstar::Mem tihmstar::readFile(const char *path){
     int fd = -1;
     cleanup([&]{
         safeClose(fd);
     });
     struct stat st = {};
-    std::vector<uint8_t> ret;
-    retassure((fd = open(path, O_RDONLY)) != -1, "Failed to open file at path '%s'",path);
+    Mem ret;
+    retassure((fd = open(path, O_RDONLY | O_BINARY)) != -1, "Failed to open file at path '%s'",path);
     retassure(!fstat(fd, &st), "Failed to fstat file at path '%s'",path);
     ret.resize(st.st_size);
     retassure(read(fd, ret.data(), ret.size()) == ret.size(), "Failed to read file at path '%s'",path);
     return ret;
 }
 
-void tihmstar::writeFile(const char *path, std::vector<uint8_t> data){
+void tihmstar::writeFile(const char *path, const void *mem, size_t memSize, int perm){
     int fd = -1;
     cleanup([&]{
         safeClose(fd);
     });
-    struct stat st = {};
-    std::vector<uint8_t> ret;
-    retassure((fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644)) != -1, "Failed to open file at path '%s'",path);
-    retassure(write(fd, data.data(), data.size()) == data.size(), "Failed to write to file at path '%s'",path);
+    retassure((fd = open(path, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, perm)) != -1, "Failed to open file at path '%s'",path);
+    retassure(write(fd, mem, memSize) == memSize, "Failed to write file at path '%s'",path);
+}
+
+bool tihmstar::fileExists(const char *path) noexcept{
+    struct stat st{};
+    return stat(path, &st) == 0;
 }
