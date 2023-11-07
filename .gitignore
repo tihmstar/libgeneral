@@ -28,3 +28,6 @@ stamp-h2
 *.pc
 configure~
 include/libgeneral/macros.h
+include/libgeneral/ByteOrder.hpp
+cache_wrkdir
+*_buildroot

@@ -9,11 +9,42 @@
 #ifndef exception_hpp
 #define exception_hpp
 
+#include <libgeneral/macros.h>
+
 #include <string>
 #include <stdarg.h>
 
+#if defined(WIN32) && !__clang__
+#   define LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO __declspec( dllexport )
+#else
+#   ifdef HAVE_FVISIBILITY
+#       define LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO __attribute__((visibility("default")))
+#   else
+#       define LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO
+#   endif
+#endif
+
+#define EASY_BASE_EXCEPTION(name) \
+class LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO name : public tihmstar::exception{ \
+public: \
+    using exception::exception; \
+    /*this makes sure typeinfo works correcty in other libs!*/ \
+    virtual const char *what() const noexcept override; \
+}
+
+#define EASY_EXCEPTION(name, base) \
+class LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO name : public tihmstar::base{ \
+    using base::base; \
+}
+
+#define EASY_BASE_EXCEPTION_DEF(name) \
+LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO const char *tihmstar::name::what() const noexcept{ \
+    /*this makes sure typeinfo works correcty in other libs!*/\
+    return tihmstar::exception::what();\
+}
+
 namespace tihmstar {
-    class exception : public std::exception{
+    class LIBGENERAL_VISIBLE_EXCEPTION_TYPEINFO exception : public std::exception{
         const char *_commit_count_str;
         const char *_commit_sha_str;
         int _line;

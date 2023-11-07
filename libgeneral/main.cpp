@@ -9,13 +9,18 @@
 #include <stdio.h>
 #include "Event.hpp"
 #include "DeliveryEvent.hpp"
-#include "lck_container.hpp"
 #include "Manager.hpp"
+#include "Mem.hpp"
+
+using namespace tihmstar;
 
 MAINFUNCTION
 int main_r(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
+    printf("start\n");
+    
+    Mem asd;
+    
+    printf("done\n");
     return 0;
 }
 
