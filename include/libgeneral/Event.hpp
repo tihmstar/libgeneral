@@ -28,7 +28,9 @@ namespace tihmstar {
         Event();
         ~Event();
         
-        void wait();
+        uint64_t getNextEvent();
+        void waitForEvent(uint64_t event);
+        
         void notifyAll();
         uint64_t members() const;
     };

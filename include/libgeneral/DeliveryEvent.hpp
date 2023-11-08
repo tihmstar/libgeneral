@@ -63,8 +63,9 @@ namespace tihmstar {
         std::unique_lock<std::mutex> ul(_dataLock);
         while (!_dataQueue.size()) {
             retassure(!_isDying, "object died while waiting on it");
+            uint64_t wevnet = _dataWait.getNextEvent();
             ul.unlock();
-            _dataWait.wait();
+            _dataWait.waitForEvent(wevnet);
 
             ul.lock();
         }
@@ -93,8 +94,9 @@ namespace tihmstar {
         _isDying = true;
         while ((uint64_t)_members > 0) {
             _dataWait.notifyAll(); //release waiter
+            uint64_t wevent = _membersUpdateEvent.getNextEvent();
             ul.unlock();
-            _membersUpdateEvent.wait();
+            _membersUpdateEvent.waitForEvent(wevent);
             ul.lock();
         }
     }

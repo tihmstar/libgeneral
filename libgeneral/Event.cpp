@@ -25,14 +25,18 @@ Event::~Event(){
     }
 }
 
-void Event::wait(){
+uint64_t Event::getNextEvent(){
+    std::unique_lock<std::mutex> lk(_m);
+    uint64_t nextEvent = _curWaitEvent+1;
+    if (nextEvent == 0) nextEvent++;
+    return nextEvent;
+}
+
+void Event::waitForEvent(uint64_t event){
     std::unique_lock<std::mutex> lk(_m);
     ++_members;
 
-    uint64_t waitingForEvent = _curWaitEvent+1;
-    if (waitingForEvent == 0) waitingForEvent++;
-
-    _cv.wait(lk, [&]{return _curSendEvent>=waitingForEvent;});
+    _cv.wait(lk, [&]{return _curSendEvent>=event;});
     
     _curWaitEvent = _curSendEvent;
     

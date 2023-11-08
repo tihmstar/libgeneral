@@ -47,6 +47,7 @@ void Manager::startLoop(){
     assure(!_loopThread);
 
     Event threadInitEvent;
+    uint64_t wevent = threadInitEvent.getNextEvent();
     _loopThread = new std::thread([&]{
         _loopState = LOOP_RUNNING;
         threadInitEvent.notifyAll();
@@ -69,7 +70,7 @@ void Manager::startLoop(){
     });
 
     //hangs here iff _loopThread didn't spawn yet
-    threadInitEvent.wait();
+    threadInitEvent.waitForEvent(wevent);
 }
 
 void Manager::stopLoop() noexcept{
