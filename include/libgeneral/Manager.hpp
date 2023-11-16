@@ -27,7 +27,12 @@ namespace tihmstar {
     protected:
         std::atomic<loop_state> _loopState;
         
-        virtual void loopEvent();
+        /*
+            Return:
+                true:  continue running loop
+                false: stop loop
+         */
+        virtual bool loopEvent();
         
     public:
         Manager(const Manager&) = delete; //delete copy constructor

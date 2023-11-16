@@ -32,10 +32,9 @@ Manager::~Manager(){
 #endif
 }
 
-void Manager::loopEvent(){
+bool Manager::loopEvent(){
     reterror("[Manager] LoopEvent wasn't overwritten. Probably subclass construction failed!");
 }
-
 
 void Manager::startLoop(){
     retassure(_loopState == LOOP_UNINITIALISED, "[Manager] loop already initialized");
@@ -59,7 +58,7 @@ void Manager::startLoop(){
         }
         while (_loopState == LOOP_RUNNING) {
             try {
-                loopEvent();
+                if (!loopEvent()) break;
             } catch (tihmstar::exception &e) {
                 debug("[Manager] breaking Manager-Loop because of exception error=%s code=%d",e.what(),e.code());
                 break;
