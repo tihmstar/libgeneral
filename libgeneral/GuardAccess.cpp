@@ -18,10 +18,10 @@ GuardAccess::GuardAccess()
 }
 
 GuardAccess::~GuardAccess(){
-    uint64_t wevent = _enterEvent.getNextEvent();
+    uint64_t wevent = _leaveEvent.getNextEvent();
     while (_members) {
-        _enterEvent.waitForEvent(wevent);
-        wevent = _enterEvent.getNextEvent();
+        _leaveEvent.waitForEvent(wevent);
+        wevent = _leaveEvent.getNextEvent();
     }
 }
 
@@ -29,11 +29,12 @@ GuardAccess::~GuardAccess(){
 void GuardAccess::addMember(){
     while (true){
         if (_members.fetch_add(1) >= GuardAccess::maxMembers){
-            _members.fetch_sub(1);
-            uint64_t wevent = _enterEvent.getNextEvent();
+            _members.fetch_sub(1); _leaveEvent.notifyAll();
+            
+            uint64_t wevent = _leaveEvent.getNextEvent();
             while (_members>=GuardAccess::maxMembers){
-                _enterEvent.waitForEvent(wevent);
-                wevent = _enterEvent.getNextEvent();
+                _leaveEvent.waitForEvent(wevent);
+                wevent = _leaveEvent.getNextEvent();
             }
         }else{
             break;
@@ -43,24 +44,23 @@ void GuardAccess::addMember(){
 
 void GuardAccess::delMember(){
     _members.fetch_sub(1);
-    _enterEvent.notifyAll();
     _leaveEvent.notifyAll();
-    _notifyEvent.notifyAll();
 }
 
 void GuardAccess::lockMember(){
     while (true){
         if (_members.fetch_add(GuardAccess::maxMembers) >= GuardAccess::maxMembers){
-            _members.fetch_sub(GuardAccess::maxMembers);
-            uint64_t wevent = _enterEvent.getNextEvent();
+            _members.fetch_sub(GuardAccess::maxMembers); _leaveEvent.notifyAll();
+            
+            uint64_t wevent = _leaveEvent.getNextEvent();
             while (_members>=GuardAccess::maxMembers){
-                _enterEvent.waitForEvent(wevent);
-                wevent = _enterEvent.getNextEvent();
+                _leaveEvent.waitForEvent(wevent);
+                wevent = _leaveEvent.getNextEvent();
             }
         }else{
             uint64_t wevent = _leaveEvent.getNextEvent();
             while (_members > GuardAccess::maxMembers){
-                _leaveEvent.waitForEvent(wevent); //wait until all members are gone
+                _leaveEvent.waitForEvent(wevent);
                 wevent = _leaveEvent.getNextEvent();
             }
             break;
@@ -70,12 +70,10 @@ void GuardAccess::lockMember(){
 
 void GuardAccess::unlockMember(){
     _members.fetch_sub(GuardAccess::maxMembers);
-    _enterEvent.notifyAll();
     _leaveEvent.notifyAll();
-    _notifyEvent.notifyAll();
 }
 
 void GuardAccess::waitForMemberDrain(){
-    uint64_t wevent = _notifyEvent.getNextEvent();
-    _notifyEvent.waitForEvent(wevent);
+    uint64_t wevent = _leaveEvent.getNextEvent();
+    _leaveEvent.waitForEvent(wevent);
 }

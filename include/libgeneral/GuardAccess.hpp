@@ -17,9 +17,7 @@ namespace tihmstar {
     class GuardAccess{
         static constexpr const uint32_t maxMembers = 0x10000;
         std::atomic<uint32_t> _members;
-        Event _enterEvent;
         Event _leaveEvent;
-        Event _notifyEvent;
 
     public:
         GuardAccess();
