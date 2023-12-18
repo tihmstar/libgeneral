@@ -7,5 +7,5 @@ Name: libgeneral
 Description: Mostly macros used by other projects
 
 Version: @VERSION_COMMIT_COUNT@
-Libs: -L${libdir} -lgeneral
+Libs: -L${libdir} -lgeneral @extra_lib_flags@
 Cflags: -I${includedir} @cpp_lib_flags@

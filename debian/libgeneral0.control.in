@@ -1,0 +1,9 @@
+Package: libgeneral0
+Version: @DEB_VERSION@
+Architecture: @DEB_ARCH@
+Conflicts: libgeneral (<< 1:0)
+Replaces: libgeneral (<< 1:0)
+Provides: libgeneral (= @DEB_VERSION@)
+Section: Libraries
+Priority: optional
+Description: Common library for tihmstar tools

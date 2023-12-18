@@ -1,0 +1,8 @@
+Package: libgeneral-dev
+Version: @DEB_VERSION@
+Architecture: @DEB_ARCH@
+Conflicts: libgeneral (<< @DEB_VERSION@)
+Depends: libgeneral0 (>= @DEB_VERSION@)
+Section: Development
+Priority: optional
+Description: Common library for tihmstar tools (Development files)

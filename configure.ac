@@ -25,6 +25,7 @@ CFLAGS+=" -std=c11"
 AC_MSG_CHECKING([whether we need platform-specific build settings])
 case $host_os in
   darwin* )
+      AC_MSG_RESULT([${host_os}])
       AC_CHECK_LIB([c++], [_ZNSt13bad_exceptionD0Ev],[have_libcpp=true],[have_libcpp=false])
       if test "x$have_libcpp" == "xtrue"; then
         ORIG_CXXFLAGS=${CXXFLAGS}
@@ -52,8 +53,10 @@ case $host_os in
       ])
       AC_LANG_POP([C++])
       ;;
-  *mingw*|*msys*)
+  *mingw*|*msys*|*linux*)
+        AC_MSG_RESULT([${host_os}])
         LDFLAGS+=" -no-undefined -lpthread"
+        AC_SUBST([extra_lib_flags], ["-no-undefined -lpthread"])
         ;;
 esac
 
@@ -139,12 +142,20 @@ else
   AC_SUBST([FUNC_HAVE_DECL_HTONLL], [0])
 fi
 
+AC_SUBST([DEB_VERSION], [0.${VERSION_COMMIT_COUNT}-git-${VERSION_COMMIT_SHA}])
+
+if test "x${host_cpu}" == "xx86_64"; then
+  AC_SUBST([DEB_ARCH], [amd64])
+fi
+
 AC_CONFIG_FILES([Makefile
                  include/libgeneral/macros.h
                  include/libgeneral/ByteOrder.hpp
                  include/Makefile
                  libgeneral.pc
-                 libgeneral/Makefile])
+                 libgeneral/Makefile
+                 debian/libgeneral0.control
+                 debian/libgeneral-dev.control])
 
 AC_OUTPUT
 
