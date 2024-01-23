@@ -47,6 +47,7 @@ class Typed_Mem {
 public:
     Typed_Mem() :_mem(sizeof(T)){}
     Typed_Mem(const void *data, size_t size):_mem(data,size){}
+    Typed_Mem(Mem &&old) noexcept :_mem(old){} //move assignment
     inline __attribute__((always_inline)) operator const T*() const {return (const T*)_mem.data();}
     inline __attribute__((always_inline)) operator T*() {return (T*)_mem.data();}
 
