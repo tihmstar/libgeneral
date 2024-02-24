@@ -186,7 +186,7 @@ MAYBE_CONSTEXPR int8_t byteOrder_LE<int8_t>(int8_t num){
 
 template<>
 inline uint16_t byteOrder_LE<uint16_t>(uint16_t num){
-#if @HEADER_HAVE_ENDIAN_H@ //HEADER_HAVE_ENDIAN_H
+#if @HAVE_DECL_HTOLE16@ //HAVE_DECL_HTOLE16
     return htole16(num);
 #else
     return isBigEndianSystem() ? num : bswap_16(num);
@@ -195,7 +195,7 @@ inline uint16_t byteOrder_LE<uint16_t>(uint16_t num){
 
 template<>
 inline int16_t byteOrder_LE<int16_t>(int16_t num){
-#if @HEADER_HAVE_ENDIAN_H@ //HEADER_HAVE_ENDIAN_H
+#if @HAVE_DECL_HTOLE16@ //HAVE_DECL_HTOLE16
     return htole16((uint16_t)num);
 #else
     return isBigEndianSystem() ? num : bswap_16(num);
@@ -204,7 +204,7 @@ inline int16_t byteOrder_LE<int16_t>(int16_t num){
 
 template<>
 inline uint32_t byteOrder_LE<uint32_t>(uint32_t num){
-#if @HEADER_HAVE_ENDIAN_H@ //HEADER_HAVE_ENDIAN_H
+#if @HAVE_DECL_HTOLE32@ //HAVE_DECL_HTOLE32
     return htole32(num);
 #else
     return isBigEndianSystem() ? num : bswap_32(num);
@@ -213,7 +213,7 @@ inline uint32_t byteOrder_LE<uint32_t>(uint32_t num){
 
 template<>
 inline int32_t byteOrder_LE<int32_t>(int32_t num){
-#if @HEADER_HAVE_ENDIAN_H@ //HEADER_HAVE_ENDIAN_H
+#if @HAVE_DECL_HTOLE32@ //HAVE_DECL_HTOLE32
     return htole32((uint32_t)num);
 #else
     return isBigEndianSystem() ? num : bswap_32(num);
@@ -222,7 +222,7 @@ inline int32_t byteOrder_LE<int32_t>(int32_t num){
 
 template<>
 inline uint64_t byteOrder_LE<uint64_t>(uint64_t num){
-#if @HEADER_HAVE_ENDIAN_H@ //HEADER_HAVE_ENDIAN_H
+#if @HAVE_DECL_HTOLE64@ //HAVE_DECL_HTOLE64
     return htole64(num);
 #else
     return isBigEndianSystem() ? num : bswap_64(num);
@@ -231,7 +231,7 @@ inline uint64_t byteOrder_LE<uint64_t>(uint64_t num){
 
 template<>
 inline int64_t byteOrder_LE<int64_t>(int64_t num){
-#if @HEADER_HAVE_ENDIAN_H@ //HEADER_HAVE_ENDIAN_H
+#if @HAVE_DECL_HTOLE64@ //HAVE_DECL_HTOLE64
     return htole64((uint64_t)num);
 #else
     return isBigEndianSystem() ? num : bswap_64(num);

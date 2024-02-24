@@ -11,6 +11,7 @@
 #include "DeliveryEvent.hpp"
 #include "Manager.hpp"
 #include "Mem.hpp"
+#include "ByteOrder.hpp"
 
 using namespace tihmstar;
 

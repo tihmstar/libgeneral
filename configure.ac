@@ -96,6 +96,23 @@ AC_CHECK_HEADERS([arpa/inet.h byteswap.h endian.h sys/param.h winsock.h])
 # Check for functions
 AC_CHECK_DECLS([htonll], [], [], [[#include <arpa/inet.h>]])
 
+AC_CHECK_DECLS([htole64], [
+    AC_SUBST([HAVE_DECL_HTOLE64], [1])
+], [
+    AC_SUBST([HAVE_DECL_HTOLE64], [0])
+], [[#include <endian.h>]])
+
+AC_CHECK_DECLS([htole32], [
+    AC_SUBST([HAVE_DECL_HTOLE32], [1])
+], [
+    AC_SUBST([HAVE_DECL_HTOLE32], [0])
+], [[#include <endian.h>]])
+
+AC_CHECK_DECLS([htole16], [
+    AC_SUBST([HAVE_DECL_HTOLE16], [1])
+], [
+    AC_SUBST([HAVE_DECL_HTOLE16], [0])
+], [[#include <endian.h>]])
 
 #Generate Headers
 if test "x$cleanup_disabled" == "xtrue"; then

@@ -31,3 +31,4 @@ include/libgeneral/macros.h
 include/libgeneral/ByteOrder.hpp
 cache_wrkdir
 *_buildroot
+debian/*.control
