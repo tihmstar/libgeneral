@@ -132,47 +132,6 @@ inline int64_t byteOrder_BE<int64_t>(int64_t num){
     return htonll(num);
 }
 
-#pragma mark implementation HO
-template<>
-MAYBE_CONSTEXPR uint8_t byteOrder_HO<uint8_t>(uint8_t num){
-    return num;
-}
-
-template<>
-MAYBE_CONSTEXPR int8_t byteOrder_HO<int8_t>(int8_t num){
-    return num;
-}
-
-template<>
-inline uint16_t byteOrder_HO<uint16_t>(uint16_t num){
-    return ntohs(num);
-}
-
-template<>
-inline int16_t byteOrder_HO<int16_t>(int16_t num){
-    return ntohs(num);
-}
-
-template<>
-inline uint32_t byteOrder_HO<uint32_t>(uint32_t num){
-    return ntohl(num);
-}
-
-template<>
-inline int32_t byteOrder_HO<int32_t>(int32_t num){
-    return ntohl(num);
-}
-
-template<>
-inline uint64_t byteOrder_HO<uint64_t>(uint64_t num){
-    return ntohll(num);
-}
-
-template<>
-inline int64_t byteOrder_HO<int64_t>(int64_t num){
-    return ntohll(num);
-}
-
 #pragma mark implementation LE
 template<>
 MAYBE_CONSTEXPR uint8_t byteOrder_LE<uint8_t>(uint8_t num){
@@ -239,7 +198,6 @@ inline int64_t byteOrder_LE<int64_t>(int64_t num){
 }
 
 #define cnvBE(x) byteOrder_BE(x)
-#define cnvHO(x) byteOrder_HO(x)
 #define cnvLE(x) byteOrder_LE(x)
 
 
