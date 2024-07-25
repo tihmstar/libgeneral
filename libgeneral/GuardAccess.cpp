@@ -28,11 +28,11 @@ GuardAccess::~GuardAccess(){
 #pragma mark public
 void GuardAccess::addMember(){
     while (true){
-        if (_members.fetch_add(1) >= GuardAccess::maxMembers){
+        if (_members.fetch_add(1) >= GuardAccess::maxMembers-1){
             _members.fetch_sub(1); _leaveEvent.notifyAll();
             
             uint64_t wevent = _leaveEvent.getNextEvent();
-            while (_members>=GuardAccess::maxMembers){
+            while (_members>=GuardAccess::maxMembers-1){
                 _leaveEvent.waitForEvent(wevent);
                 wevent = _leaveEvent.getNextEvent();
             }
@@ -71,6 +71,22 @@ void GuardAccess::lockMember(){
 void GuardAccess::unlockMember(){
     _members.fetch_sub(GuardAccess::maxMembers);
     _leaveEvent.notifyAll();
+}
+
+bool GuardAccess::tryLockMember(){
+    while (true){
+        if (_members.fetch_add(GuardAccess::maxMembers) >= GuardAccess::maxMembers){
+            _members.fetch_sub(GuardAccess::maxMembers); _leaveEvent.notifyAll();
+            return false;
+        }else{
+            uint64_t wevent = _leaveEvent.getNextEvent();
+            while (_members > GuardAccess::maxMembers){
+                _leaveEvent.waitForEvent(wevent);
+                wevent = _leaveEvent.getNextEvent();
+            }
+            return true;
+        }
+    }
 }
 
 void GuardAccess::waitForMemberDrain(){
