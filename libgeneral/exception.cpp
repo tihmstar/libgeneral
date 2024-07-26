@@ -27,7 +27,7 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
 {
     va_list ap = {};
     va_start(ap, err);
-    vasprintf(&_err, err, ap);
+    (void)!vasprintf(&_err, err, ap);
     va_end(ap);
 };
 
@@ -38,7 +38,7 @@ exception::exception(const char *commit_count_str, const char *commit_sha_str, i
     _filename(filename),
     _err(NULL)
 {
-    vasprintf(&_err, err, ap);
+    (void)!vasprintf(&_err, err, ap);
 };
 
 exception::exception(const exception &e) :    //copy constructor
@@ -74,19 +74,19 @@ void exception::dump() const{
 
 std::string exception::dumpStr() const{
     char *dumpstr = NULL;
-    asprintf(&dumpstr, "[exception]:\n"
-                        "what=%s\n"
-                        "code=%d\n"
-                        "line=%d\n"
-                        "file=%s\n"
-                        "commit count=%s\n"
-                        "commit sha  =%s\n"
-                        ,_err
-                        ,code()
-                        ,_line
-                        ,_filename.c_str()
-                        ,build_commit_count().c_str()
-                        ,build_commit_sha().c_str()
+    (void)!asprintf(&dumpstr,"[exception]:\n"
+                            "what=%s\n"
+                            "code=%d\n"
+                            "line=%d\n"
+                            "file=%s\n"
+                            "commit count=%s\n"
+                            "commit sha  =%s\n"
+                            ,_err
+                            ,code()
+                            ,_line
+                            ,_filename.c_str()
+                            ,build_commit_count().c_str()
+                            ,build_commit_sha().c_str()
             );
     {
         std::string ret = dumpstr;
