@@ -13,7 +13,9 @@ jobs:
       BUILDROOT: "buildroot_${{ matrix.platform }}"
     
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name:  Install pre-dependencies
       run:   |
          if [ "$RUNNER_OS" == "Linux" ]; then
@@ -33,7 +35,7 @@ jobs:
       run: make
     - name: make install
       run: make DESTDIR=$GITHUB_WORKSPACE/$BUILDROOT install
-    - uses: actions/upload-artifact@v1
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ env.BUILDROOT }}
         path: ${{ env.BUILDROOT }}
@@ -41,16 +43,17 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: Download ubuntu artifact
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v4
       with:
         name: buildroot_ubuntu-latest   
         path: buildroot_ubuntu-latest    
     - name: Download macos artifact
-      uses: actions/download-artifact@v1
+      uses: actions/download-artifact@v4
       with:
         name: buildroot_macos-latest
         path: buildroot_macos-latest
@@ -64,32 +67,16 @@ jobs:
         zip -r buildroot_ubuntu-latest.zip buildroot_ubuntu-latest
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1.0.0
+      uses: softprops/action-gh-release@v2
+      if: github.ref == 'refs/heads/master'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.BUILD_VERSION_NUM }}
-        release_name: Build ${{ env.BUILD_VERSION_STR }}
-        body: ${{ env.COMMIT_MSG }}
-        draft: false
         prerelease: false
-    - name: Upload Release Asset ubuntu
-      id: upload-release-asset-ubuntu
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: buildroot_ubuntu-latest.zip
-        asset_name: buildroot_ubuntu-latest.zip
-        asset_content_type: application/zip
-    - name: Upload Release Asset macos
-      id: upload-release-asset-macos 
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: buildroot_macos-latest.zip
-        asset_name: buildroot_macos-latest.zip
-        asset_content_type: application/zip
+        draft: false
+        tag_name: ${{ env.BUILD_VERSION_NUM }}
+        name: Build ${{ env.BUILD_VERSION_STR }}
+        body: ${{ env.COMMIT_MSG }}
+        files: |
+          buildroot_ubuntu-latest.zip
+          buildroot_macos-latest.zip
