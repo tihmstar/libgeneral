@@ -16,6 +16,7 @@ namespace tihmstar {
     template <typename T>
     class DeliveryEvent{
         bool _isDying;
+        bool _isFinished;
         std::atomic<uint64_t> _members;
         Event _membersUpdateEvent;
         
@@ -30,7 +31,13 @@ namespace tihmstar {
         
         T wait();
         void post(T data);
-        
+
+        /*
+            Notifies waiters that no more data will arrive in queue.
+            Once the que is empty, calls to wait will throw (same as if killing)
+         */
+        void finish();
+
         /*
             Releases waiter and hints destruction of the object in near future
             Further calls to wait() or post() are not allowed after calling kill()
@@ -42,7 +49,7 @@ namespace tihmstar {
 
     template <class T>
     DeliveryEvent<T>::DeliveryEvent()
-    : _isDying(false),_members(0)
+    : _isDying(false),_isFinished(false),_members(0)
     {
         //
     }
@@ -62,6 +69,7 @@ namespace tihmstar {
 
         std::unique_lock<std::mutex> ul(_dataLock);
         while (!_dataQueue.size()) {
+            retassure(!_isFinished, "object finished. There will be no more data in the queue");
             retassure(!_isDying, "object died while waiting on it");
             uint64_t wevnet = _dataWait.getNextEvent();
             ul.unlock();
@@ -84,6 +92,20 @@ namespace tihmstar {
         
         _dataLock.lock();
         _dataQueue.push(data);
+        _dataWait.notifyAll();
+        _dataLock.unlock();
+    }
+
+    template <class T>
+    void DeliveryEvent<T>::finish(){
+        ++_members;
+        cleanup([&]{
+            --_members;
+            _membersUpdateEvent.notifyAll();
+        });
+        
+        _dataLock.lock();
+        _isFinished = true;
         _dataWait.notifyAll();
         _dataLock.unlock();
     }
