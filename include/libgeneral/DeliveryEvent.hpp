@@ -43,6 +43,11 @@ namespace tihmstar {
             Further calls to wait() or post() are not allowed after calling kill()
          */
         void kill();
+        
+        /*
+            Has not been killed or finished
+         */
+        bool isActive();
     };
 
 #pragma mark implementation
@@ -121,6 +126,11 @@ namespace tihmstar {
             _membersUpdateEvent.waitForEvent(wevent);
             ul.lock();
         }
+    }
+
+    template <class T>
+    bool DeliveryEvent<T>::isActive(){
+        return !_isDying && !_isFinished;
     }
 };
 
