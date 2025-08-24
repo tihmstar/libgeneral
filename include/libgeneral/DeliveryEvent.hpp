@@ -21,14 +21,14 @@ namespace tihmstar {
         Event _membersUpdateEvent;
         
         Event _dataWait;
-        Event _dataIsFree;
         std::mutex _dataLock;
         std::queue<T> _dataQueue;
 
     public:
         DeliveryEvent();
         ~DeliveryEvent();
-        
+
+        T popNoWait();
         T wait();
         void post(T data);
 
@@ -65,6 +65,20 @@ namespace tihmstar {
     }
 
     template <class T>
+    T DeliveryEvent<T>::popNoWait(){
+        ++_members;
+        cleanup([&]{
+            --_members;
+            _membersUpdateEvent.notifyAll();
+        });
+
+        std::unique_lock<std::mutex> ul(_dataLock);
+        retassure(_dataQueue.size(), "No element in queue");
+        T mydata = _dataQueue.front(); _dataQueue.pop();
+        return mydata;
+    }
+
+    template <class T>
     T DeliveryEvent<T>::wait(){
         ++_members;
         cleanup([&]{
@@ -83,7 +97,6 @@ namespace tihmstar {
             ul.lock();
         }
         T mydata = _dataQueue.front(); _dataQueue.pop();
-        _dataIsFree.notifyAll();
         return mydata;
     }
 
