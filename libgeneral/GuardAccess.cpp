@@ -73,6 +73,10 @@ void GuardAccess::unlockMember(){
     _leaveEvent.notifyAll();
 }
 
+bool GuardAccess::isLocked(){
+    return _members >= GuardAccess::maxMembers;
+}
+
 bool GuardAccess::tryLockMember(){
     while (true){
         if (_members.fetch_add(GuardAccess::maxMembers) >= GuardAccess::maxMembers){
