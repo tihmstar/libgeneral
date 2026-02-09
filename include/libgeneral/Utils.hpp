@@ -18,6 +18,8 @@ namespace tihmstar {
 Mem readFile(const char *path);
 void writeFile(const char *path, const void *mem, size_t memSize, int perm = 0644);
 bool fileExists(const char *path) noexcept;
+uint64_t parseNum(const char *num) noexcept;
+int hexToBytes(const char *hexstr, uint8_t *output, size_t outbufSize) noexcept;
 };
 
 #endif /* Utils_hpp */
