@@ -77,7 +77,7 @@ int tihmstar::hexToBytes(const char *hexstr, uint8_t *outbuf, size_t outbufSize)
 
 error:
   if (err){
-    return -res;
+    return -err;
   }
-  return res;
+  return res/2;
 }
