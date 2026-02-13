@@ -81,3 +81,24 @@ error:
   }
   return res/2;
 }
+
+void tihmstar::bytesToHex(const uint8_t *bytes, size_t bytesSize, char *outStr, size_t *outStrSize) noexcept{
+    size_t loc_outMaxSize = *outStrSize;
+    if (loc_outMaxSize < 3){
+        *outStrSize = 0;
+        return;
+    }
+    loc_outMaxSize = (loc_outMaxSize-1) &~1;
+    
+    size_t i=0;
+    for (; i<bytesSize && i*2 < loc_outMaxSize; i++) {
+        uint8_t n1 = (bytes[i] >> 4) & 0xF;
+        uint8_t n2 = (bytes[i] >> 0) & 0xF;
+        if (n1 >= 10) *outStr++ = 'A'+(n1-10);
+        else *outStr++ = '0'+n1;
+        if (n2 >= 10) *outStr++ = 'A'+(n2-10);
+        else *outStr++ = '0'+n2;
+    }
+    *outStr = '\0';
+    *outStrSize = i;
+}
